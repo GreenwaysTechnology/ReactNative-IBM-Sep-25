@@ -1,0 +1,28 @@
+Session:
+
+1.Java script language fundamentals - ES 6
+2.React
+3.Redux
+     -------------Web Apps, Mobile Apps
+4.Node.js,Express.js For back end interactions - fundamentals
+5.React Native
+
+Lab:
+
+Common software:
+
+1.Node.js
+2.Vs code
+
+Mobile development:
+
+We are going to use Android on windows platform.
+
+if you have mac book, you can have android and ios lab setup
+
+
+
+
+
+
+

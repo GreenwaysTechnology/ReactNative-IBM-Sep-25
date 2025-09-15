@@ -1,0 +1,96 @@
+											ES 6
+.........................................................................................................................................................................................................................................
+What is ES 6?
+
+  IT is just version no of JavaScript language.
+
+What is JavaScript?
+   JavaScript is Object based, functional style programming language.
+
+Versions of JavaScript:
+
+JavaScript language created for browsers in 1995 for building dynamic web pages by Netscape Communication.
+
+After JavaScript language created, the language was submitted to standard body called
+"ECMA" international
+
+After submission, the language was standardized and released by committee.
+
+1.ES 1.0 -->1996
+2.ES 3.0 -->1999
+3.ES 4.0 -->2006
+4.ES 5.0 --->2007
+5.ES 6.0 --->2012-2015
+6.ES 7.0 ----->2016
+etc.....
+
+JavaScript learning path(ES6):
+.................................................
+1.Language fundamentals
+2.Functions 
+3.Objects
+4.Async Programming
+
+1.Language fundamentals
+ ->Variables
+ ->Literals
+ ->Type Systems
+
+Project creation:
+
+G:\IBM\2025\Sep\ReactNative>mkdir es6apps
+
+G:\IBM\2025\Sep\ReactNative>cd es6apps
+
+G:\IBM\2025\Sep\ReactNative\es6apps>
+
+G:\IBM\2025\Sep\ReactNative\es6apps>mkdir src
+
+G:\IBM\2025\Sep\ReactNative\es6apps>code .
+
+HTML Code:
+
+es6apps/index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ES6APPS</title>
+</head>
+<body>
+    <h1>ES 6 Apps</h1>
+</body>
+</html>
+
+in order to run this code ,we need web server.
+
+vs code has integrated web server called "live server"
+
+Vscode -->Extensions----live server--install-restart vs code.
+
+right click on "index.html" -- "open with live server" -click--- it will launch in the default web browser - chrome is most preferred browser.
+
+........................................................................................................................................................................................................................................
+									writing first js code and integrate with html
+
+
+src/index.js
+console.log("hello")
+
+index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ES6APPS</title>
+</head>
+<body>
+    <h1>ES 6 Apps</h1>
+    <script src="src/index.js"></script>
+</body>
+</html>
+
+And run the html file , go to browser right click , open browser console window where you can see the result.
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
