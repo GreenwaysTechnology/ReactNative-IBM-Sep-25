@@ -578,3 +578,167 @@ let login = (userName, password, success, failure) => {
 login('admin', 'admin', (status) => console.log(status), (err) => console.log(err))
 
 login('foo', 'bar', (status) => console.log(status), (err) => console.log(err))
+.....................................................................................
+			Objects
+....................................................................................
+
+Objects can be created in two ways
+
+1.constructors pattern
+   es 5 functions 
+   es 6 classes
+2.literal pattern
+
+
+class Employee {
+    //state
+    id = 0
+    name = 'Subramanian'
+    salary = 1000
+    //methods
+    calculateSalary() {
+        return this.salary * 2
+    }
+    calculateLeave = () => {
+        return 10
+    }
+}
+//create instance
+//let is keyword
+//emp is just reference variable
+//new  is operator
+//Employee() is constructor call(function call)
+let emp = new Employee()
+console.log(`id ${emp.id}`)
+console.log(`name ${emp.name}`)
+console.log(`id ${emp.salary}`)
+console.log(`totalSalary ${emp.calculateSalary()}`)
+
+..................................................................................
+			State initialization
+...................................................................................
+
+1.inside class directly
+2.inside class inside constructor
+3.outside class using reference variable
+
+1.inside class directly
+
+class Employee {
+    //state
+    id = 0
+    name = 'Subramanian'
+    salary = 1000
+    //methods
+    calculateSalary() {
+        return this.salary * 2
+    }
+    calculateLeave = () => {
+        return 10
+    }
+}
+2.inside class inside constructor
+
+1.only one constructor declaration is allowed
+2.constructors are declared using built in constructor function.
+3.constructor can take arg, which is called constructor overloading
+
+
+class Employee {
+    //state
+    id
+    name
+    salary
+    constructor() {
+        this.id = 0
+        this.name = 'Subramanian'
+        this.salary = 1000
+    }
+
+    //methods
+    calculateSalary() {
+        return this.salary * 2
+    }
+    calculateLeave = () => {
+        return 10
+    }
+}
+let emp = new Employee()
+console.log(`id ${emp.id}`)
+console.log(`name ${emp.name}`)
+console.log(`id ${emp.salary}`)
+console.log(`totalSalary ${emp.calculateSalary()}`)
+
+Constructor parameters:
+class Employee {
+    //state
+    id
+    name
+    salary
+    constructor(id = 0, name = 'Subramanian', salary = 1000) {
+        this.id = id
+        this.name = name
+        this.salary = salary
+    }
+
+    //methods
+    calculateSalary() {
+        return this.salary * 2
+    }
+    calculateLeave = () => {
+        return 10
+    }
+}
+let emp = new Employee()
+console.log(`id ${emp.id}`)
+console.log(`name ${emp.name}`)
+console.log(`id ${emp.salary}`)
+console.log(`totalSalary ${emp.calculateSalary()}`)
+
+emp = new Employee(2, 'Ram', 2400)
+console.log(`id ${emp.id}`)
+console.log(`name ${emp.name}`)
+console.log(`id ${emp.salary}`)
+console.log(`totalSalary ${emp.calculateSalary()}`)
+
+3.Outside class, after object creation.
+class Employee {
+    //state
+    id
+    name
+    salary
+    constructor(id = 0, name = 'Subramanian', salary = 1000) {
+        this.id = id
+        this.name = name
+        this.salary = salary
+    }
+
+    //methods
+    calculateSalary() {
+        return this.salary * 2
+    }
+    calculateLeave = () => {
+        return 10
+    }
+}
+let emp = new Employee()
+console.log(`id ${emp.id}`)
+console.log(`name ${emp.name}`)
+console.log(`salary ${emp.salary}`)
+console.log(`totalSalary ${emp.calculateSalary()}`)
+
+emp = new Employee(2, 'Ram', 2400)
+console.log(`id ${emp.id}`)
+console.log(`name ${emp.name}`)
+console.log(`salary ${emp.salary}`)
+console.log(`totalSalary ${emp.calculateSalary()}`)
+
+//reinitalize the value
+emp.id = 900
+emp.name = 'Raja'
+emp.salary = 8000
+
+console.log(`id ${emp.id}`)
+console.log(`name ${emp.name}`)
+console.log(`salary ${emp.salary}`)
+console.log(`totalSalary ${emp.calculateSalary()}`)
