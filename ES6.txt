@@ -94,3 +94,256 @@ index.html
 
 And run the html file , go to browser right click , open browser console window where you can see the result.
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+.....................................................................................
+1.variable declarations
+
+var,let,const -keywords to declare variables
+ 
+ let /const - es 6 keywords
+eg:
+ let firstName
+
+2.literals -values
+   strings,numbers,boolean,undefined,NaN,infinity,function,null,object
+
+
+3.Data types
+   js is dynamic typed language-the type of variable is understood only during runtime.
+  int a =10 - strongly typed
+  let a =20 - dynamic typed
+
+  literal   - type
+....................
+  string    - string
+  number    - number
+  boolean   - boolean
+  undefined   - undefined
+  NaN       - number
+  Infinity  - number
+  function  - function
+  object    - object
+  null      - object
+
+Running Env:
+1.node js - command line
+2.Browser
+3.Mobile
+
+...................................................................................
+				Variables, data types, Literals
+.....................................................................................
+
+JS is dynamically typed, so type is not declared in advance, type of variables are decided during runtime, based on "literals-values"
+
+Js has 9 literals but only 6 types.
+
+strings, numbers, boolean, undefined, object, function- types
+
+
+Strings:
+//strings : "",'',``,${}
+//Strings
+let firstName = "Subramanian"
+let lastName = 'Murugan'
+//back tick and string interpolation
+let fullName = firstName + lastName // traditional 
+console.log('Name' + firstName)
+//back tick 
+fullName = `${firstName} ${lastName}`
+console.log(`Full Name ${fullName}`) // string interpoltion
+
+//multi line strings
+let doc = `
+   <html>
+      <head>
+          <title></title>
+      </head>
+    <body>
+    </body>
+ </html>
+`
+console.log(doc)
+
+Numbers:
+ only type called number 
+ 64 bit aka double.
+
+//numbers
+let a = 10
+let b = 20
+let c = a + b 
+console.log(`c ${c}`)
+
+Booleans:
+ true or false
+
+//true or false 
+
+let isValid = true
+let isEnabled = false
+console.log(`Valid ${isValid} Enabled ${isEnabled}`)
+
+
+Undefined:
+ Variable is declared without any valid value.
+
+let price;
+console.log(`Price is ${price}`)
+
+NaN : Not a Number
+
+NaN is number only which represents "error".
+If you do any numerical computation, if computation is failed you will get NaN.
+NaN is kind of "error".
+if you get NaN you have to fix because is bug
+
+NaN Use case:
+if you do computation against undefined values, you get NaN.
+
+let price;
+let qty = 100;
+let totalPrice = price * qty; //undefined * 100
+console.log(`Total Price is ${totalPrice}`)
+
+
+Infinity:
+  Div/0
+//infnity
+let price = 100;
+let avgPrice = price / 0
+console.log(`Avg Price ${avgPrice}`)
+
+..................................................................................
+			Advanced Boolean
+..................................................................................
+What can be true or false?
+
+decision making : if. Else ,ternary operator
+
+in JavaScript is every thing is true except the following values 
+
+Falsy values
+
+ * 
+ *  1.boolean false
+ *  2.Empty string "" ,''
+ *  3.0
+ *  4.undefined
+ *  5.NaN
+ *  6.null
+ */
+
+//advanced booleans 
+
+let message = 'Hello'
+
+if (message) {
+    console.log(message)
+} else {
+    console.log('wrong')
+}
+message = ''
+if (message) {
+    console.log(message)
+} else {
+    console.log('wrong')
+}
+let myvar;
+if (myvar) {
+    console.log(`MyVar is ${myvar}`)
+} else {
+    console.log(`MyVar is ${myvar}`)
+}
+myvar = 0
+if (myvar) {
+    console.log(`MyVar is ${myvar}`)
+} else {
+    console.log(`MyVar is ${myvar}`)
+}
+myvar = false
+if (myvar) {
+    console.log(`MyVar is ${myvar}`)
+} else {
+    console.log(`MyVar is ${myvar}`)
+}
+....................................................................................
+				Operator -Equal
+.....................................................................................
+
+== ->Double equal
+=== ->Triple equal
+!=
+!==
+
+let a = 10;
+let b = 10;
+
+if (a == b) {
+    console.log('a and b are equal')
+} else {
+    console.log('a and b are not equal')
+}
+
+let x = 10;
+let y = "10"
+
+if (x == y) {
+    console.log('x and y are equal')
+} else {
+    console.log('x and y are not equal')
+}
+
+
+if (x === y) {
+    console.log('x and y are equal')
+} else {
+    console.log('x and y are not equal')
+}
+...................................................................................
+....................................................................................
+				Operator -Equal
+.....................................................................................
+
+== ->Double equal
+=== ->Triple equal
+!=
+!==
+
+let a = 10;
+let b = 10;
+
+if (a == b) {
+    console.log('a and b are equal')
+} else {
+    console.log('a and b are not equal')
+}
+
+let x = 10;
+let y = "10"
+
+if (x == y) {
+    console.log('x and y are equal')
+} else {
+    console.log('x and y are not equal')
+}
+
+
+if (x === y) {
+    console.log('x and y are equal')
+} else {
+    console.log('x and y are not equal')
+}
+
+const:
+   it is read only where as let is reassign able.
+
+let a = 10;
+console.log(`a ${a}`)
+a = 90
+console.log(`a ${a}`)
+
+const b = 90;
+console.log(`b ${b}`)
+b = 90
+console.log(`b ${b}`)
