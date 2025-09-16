@@ -742,3 +742,178 @@ console.log(`id ${emp.id}`)
 console.log(`name ${emp.name}`)
 console.log(`salary ${emp.salary}`)
 console.log(`totalSalary ${emp.calculateSalary()}`)
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+.....................................................................................
+			 Inheritance
+.....................................................................................
+//parent
+class Account {
+    constructor() {
+        console.log('account is initalized')
+    }
+    deposit() {
+        return 0
+    }
+}
+//child
+class SavingsAccount extends Account {
+    constructor() {
+        super()
+        console.log('SavingsAccount is initalized')
+    }
+    //redefining(overriding)
+    deposit() {
+        return 1000
+    }
+}
+let sb = new SavingsAccount()
+console.log(sb.deposit())
+...................................................................................
+			  literal objects
+...................................................................................
+
+No class and No function , still we can create object....
+
+//literal
+
+let employee = {
+    id: 1,
+    name: 'Subramanian',
+    salary: 1000
+}
+console.log(employee.id)
+console.log(employee.name)
+console.log(employee.salary)
+
+//nested object
+
+let product = {
+    id: 1,
+    category: {
+        id: 1,
+        name: 'Electronics'
+    }
+}
+console.log(product.id, product.category.name)
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+											Built in Objects
+
+Category of Objects
+1.POJO - Plain old java script
+ Wrapper objects (Number,String,Boolean)
+ Array -Data Structure
+JSON - Json Parser Object , to parse incoming json , also outgoing json
+Math
+Object -Root /Super Most Parent Object in javascript
+Promise
+etc...
+
+2.DOM Objects
+
+Browser specific  object
+
+Window ,Document, Form, History etc...
+
+
+..................................................................................
+				Arrays
+...................................................................................
+
+Arrays core data structure
+Array can hold any value
+Array is object which lot of methods
+
+let list = ['apple', 'orange', 'jackfruit']
+//iterate array : for loop, for..each,filter,map,reduce etc...
+
+list.forEach(item => {
+    console.log(item)
+})
+//array of objects
+
+let todos = [
+    { id: 1, status: 'done', title: 'learn js' },
+    { id: 2, status: 'pending', title: 'learn react' },
+    { id: 3, status: 'pending', title: 'learn react native' }
+]
+todos.forEach(todo => {
+    console.log(todo.id, todo.status, todo.title)
+})
+....................................................................................	
+			Object De structuring
+...................................................................................
+How to de structure object properties when it is passed as arg
+
+// function printEmployee(employee) {
+//     console.log(`Id ${employee.id}`)
+//     console.log(`name ${employee.name}`)
+//     console.log(`City ${employee.address.city}`)
+// }
+
+//with destructuring
+// function printEmployee(employee) {
+//     const { id, name, address: { city } } = employee
+//     console.log(`Id ${id}`)
+//     console.log(`name ${name}`)
+//     console.log(`City ${city}`)
+// }
+function printEmployee({ id, name, address: { city } }) {
+    console.log(`Id ${id}`)
+    console.log(`name ${name}`)
+    console.log(`City ${city}`)
+}
+
+printEmployee({ id: 1, name: 'Subramanian', address: { city: 'Coimbatore' } })
+
+..................................................................................
+			Return object and Destructuring
+..................................................................................
+// function getStock() {
+//     return {
+//         id: 1,
+//         symbol: 'google',
+//         qty: 100,
+//         price: 1000
+//     }
+// }
+// console.log(getStock())
+
+// function getStock(id = 0, symbol = 'Foo', qty = 0, price = 0) {
+//     return {
+//         id: id,
+//         symbol: symbol,
+//         qty: qty,
+//         price: price
+//     }
+// }
+// console.log(getStock(1, 'google', 100, 1000))
+// console.log(getStock())
+
+// function getStock(id = 0, symbol = 'Foo', qty = 0, price = 0) {
+//     //destructuring
+//     return {
+//         //left;right if same,make it
+//         id,
+//         symbol,
+//         qty,
+//         price
+//     }
+// }
+// const getStock = (id = 0, symbol = 'Foo', qty = 0, price = 0) => {
+//     return {
+//         id,
+//         symbol,
+//         qty,
+//         price
+//     }
+// }
+const getStock = (id = 0, symbol = 'Foo', qty = 0, price = 0) => ({
+    id,
+    symbol,
+    qty,
+    price
+})
+
+console.log(getStock(1, 'google', 100, 1000))
+console.log(getStock())
+
