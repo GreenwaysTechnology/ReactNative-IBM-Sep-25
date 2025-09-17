@@ -1,10 +1,26 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+// import React, { Fragment } from "react"
+import { createRoot } from "react-dom/client"
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+// const Heading = () => {
+//     return <React.Fragment>
+//         <h1>IBM</h1>
+//         <p>This is para</p>
+//     </React.Fragment>
+// }
+// const Heading = () => {
+//     return <Fragment>
+//         <h1>IBM</h1>
+//         <p>This is para</p>
+//     </Fragment>
+// }
+const Heading = () => {
+    return <>
+        <h1>IBM</h1>
+        <p>This is para</p>
+    </>
+}
+
+
+
+createRoot(document.getElementById('root')).render(<Heading />)
+
