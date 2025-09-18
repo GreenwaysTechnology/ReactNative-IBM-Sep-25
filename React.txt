@@ -1079,7 +1079,129 @@ function App() {
     </>
 }
 export default App;
-.........................................
+.....................................................................................................................................................................................................................................
+..........................................................................................................................................................
+						Styling
+..........................................................................................................................................................
+
+web apps which are running inside browser, is based "CSS" styling language.
+
+There are two ways to apply CSS to react components
+
+1.external styles
+2.inline style
+
+external styles are applied via style sheet.
+
+app.css, index.css
+
+style selectors
+
+inside code
+
+import './App.css'
+
+<div className="background">
+
+</div>
+
+inline Style:
+  css styles are applied via JavaScript object style object
+
+<div style={StyleObject} </div>
+
+You can write your own css styles, but mostly not recommended, because we have to use css frameworks 
+
+1.bootstrap
+2.tailwindcss
 
 
+How to integrate tailwind css framework:
+
+Steps:
+01.
+Create your project
+Start by creating a new Vite project if you don’t have one set up already. The most common approach is to use Create Vite.
+
+npm create vite@latest styling-app
+cd  styling-app
+
+
+02
+Install Tailwind CSS
+Install tailwindcss and @tailwindcss/vite via npm.
+
+npm install tailwindcss @tailwindcss/vite
+
+
+03
+Configure the Vite plugin
+Add the @tailwindcss/vite plugin to your Vite configuration.
+
+
+vite.config.js
+import { defineConfig } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig({
+  plugins: [
+    tailwindcss(),
+  ],
+})
+with React:
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react(),tailwindcss()],
+})
+
+
+04
+Import Tailwind CSS
+Add an @import to your CSS file that imports Tailwind CSS
+
+src/index.css
+@import "tailwindcss";
+
+05.Add in the src/main.jsx
+import './index.css'
+
+
+
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+
+// const styles = { fontWeight: 'bold', fontSize: 80, color: 'blue' }
+const styles = {
+    header: {
+        fontWeight: 'bold', fontSize: 80, color: 'blue'
+    },
+    container: {
+        backgroundColor: 'yellow'
+    }
+}
+
+const Header = () => {
+    return <div className="m-40" style={styles.container}>
+        <h1 style={{ fontWeight: 'bold', fontSize: 80, color: 'blue' }}>Hello</h1>
+        <h1 style={styles.header}>Hello</h1>
+
+    </div>
+}
+
+
+const App = () => {
+    return <>
+        <Header />
+    </>
+}
+createRoot(document.getElementById('root')).render(
+    <StrictMode>
+        <App />
+    </StrictMode>,
+)
 
