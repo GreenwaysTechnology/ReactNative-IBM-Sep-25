@@ -2,34 +2,68 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import React from 'react'
+import { produce } from 'immer'
 
-class Review extends React.Component {
+class Post extends React.Component {
+
     state = {
-        like: 0
+        posts: [], //handle acutal posts data
+        isLoading: false, //handle slow calls -show spinner
+        error: null
     }
-    onIncrement = () => {
-        this.setState((prevState) => {
-            return { ...prevState, like: prevState.like + 1 }
-        })
+
+    async fetchPosts() {
+        try {
+            const url = 'https://jsonplaceholder.typicode.com/posts'
+            const response = await fetch(url, { method: 'GET' })
+            const posts = await response.json()
+            console.log(posts)
+            this.setState(produce(this.state, draft => {
+                //initalize the posts
+                draft.posts = posts
+                draft.isLoading = true
+            }))
+        }
+        catch (err) {
+            this.setState(produce(this.state, draft => {
+                //initalize the posts
+                draft.error = err
+                draft.isLoading = true
+            }))
+        }
     }
+    componentDidMount() {
+        //api logic
+        this.fetchPosts()
+    }
+
+
     render() {
-        return <ReviewDetails {...this.state} onIncrement={this.onIncrement} />
+        const { posts, isLoading, error } = this.state
+        if (error) {
+            return <div><h1>Something went Wrong {error.message}</h1></div>
+        } else if (!isLoading) {
+            return <h1>Posts Loading...</h1>
+        } else {
+            return <div>
+                {posts.map(post => {
+                    return <section key={post.id}>
+                        <h1>{post.id}</h1>
+                        <h2>{post.title}</h2>
+                        <h2>{post.body}</h2>
+                    </section>
+                })}
+            </div>
+        }
     }
 }
 
-//child component to show UI, Where as parent component has state and biz logic
-const ReviewDetails = ({ like, onIncrement }) => {
-    return <div>
-        <h1>Review App</h1>
-        <h2>Like : {like}</h2>
-        <button onClick={onIncrement}>Like</button>
-    </div>
-}
+
 
 
 const App = () => {
     return <>
-        <Review />
+        <Post />
     </>
 }
 
