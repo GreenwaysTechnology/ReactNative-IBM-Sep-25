@@ -2526,6 +2526,229 @@ createRoot(document.getElementById('root')).render(
         <App />
     </StrictMode>,
 )
+..........................................................................................................................................................................................................................................		Functional components, state,life cycle methods
+			   (Hooks)
+....................................................................................
+
+
+What is hooks and why?
+
+Hooks are simple javascript function which holds Component's logic outside component.
+
+	"Incase of class component , if you define a biz logic, the similar logic if you have in another component, we can't reuse."
+
+React 16 introduced a feature called hooks, by using hooks you can eleminate class components completly, by keeping functional components
+
+Hooks abstract complex  biz logic in reusable mannaer.
+
+React provides lot of built in hooks to build app , as simple as possible , mean time you can create your own hooks (custom hooks).
+
+Hooks features:
+
+1.hook is simple js function
+2.hook can take input and also return values
+3.every hook function starts with "useHookName"
+
+
+Common Built in Hooks
+
+1.useState
+   To declare state and mutation inside functions
+2.useEffect
+   It represents "Life Methods" - compoentDidMount,componentDidUpdate
+3.useContext
+4.useRef
+5.useMemo
+6.useCallback
+etc......
+
+Thanks to class components,goodbye to class components....
+.....................................................................................
+State declaration,mutation:
+...........................
+
+useState:
+
+Syntax:
+
+const [state,setState]=useState(initalState)
+
+state -is just variable it could be any thing,represents current state
+setState -  pure function its name generally setVariableName, A function that updates state
+
+const [counter,setCounter]=useState(initalState)
+
+initalState could be
+
+1.primitive values numbers,string,boolean
+2.objects
+3.arrays
+
+const [counter,setCounter]=useState(0)
+const [state,setState]=useState('hello')
+const [state,setState]=useState(false)
+const [state,setState]=useState(null)
+const [state,setState]=useState({count:0})
+const [state,setState]=useState([])
+..........................................................................................................................................................
+
+
+Simple state:
+import { useState } from "react"
+
+//counter
+const Counter = props => {
+    //state declaration
+    const [counter, setCounter] = useState(0)
+
+    const onIncrement = () => {
+        // setCounter(prevState => {
+        //     return prevState + 1
+        // })
+        setCounter(counter + 1)
+    }
+    return <div>
+        <h1>Counter {counter}</h1>
+        <button onClick={onIncrement}>+</button>
+    </div>
+}
+
+
+
+export default function App() {
+    return <>
+        <Counter />
+    </>
+}
+...........................................................................................
+
+Inline Listener:
+import { useState } from "react"
+
+const Counter = props => {
+    const [counter, setCounter] = useState(0)
+    return <div>
+        <h1>Counter {counter}</h1>
+        <button onClick={() => setCounter(counter + 1)}>+</button>
+    </div>
+}
+
+
+
+export default function App() {
+    return <>
+        <Counter />
+    </>
+}
+............................
+mutli state:
+
+import { useState } from "react"
+
+const Counter = props => {
+    const [increment, setIncrement] = useState(0)
+    const [decrement, setDecrement] = useState(100)
+    return <div>
+        <h1>Increment {increment} Decrement {decrement}</h1>
+        <button onClick={() => setIncrement(increment + 1)}>+</button>
+        <button onClick={() => setDecrement(decrement - 1)}>-</button>
+
+    </div>
+}
+
+export default function App() {
+    return <>
+        <Counter />
+    </>
+}
+............................................................................
+
+Objects and hooks:
+import { useState } from "react"
+
+const Counter = props => {
+    const [counter, setCounter] = useState({ increment: 0, decrement: 100 })
+    return <div>
+        <h1>Increment {counter.increment} Decrement {counter.decrement}</h1>
+        <button onClick={() => {
+            setCounter(prevState => {
+                return {
+                    ...prevState,
+                    increment: prevState.increment + 1
+                }
+            })
+        }}>+</button>
+        <button onClick={() => {
+            setCounter(prevState => {
+                return {
+                    ...prevState,
+                    decrement: prevState.decrement - 1
+                }
+            })
+        }}>-</button>
+
+    </div>
+}
+
+export default function App() {
+    return <>
+        <Counter />
+    </>
+}
+..........
+
+Objects and hooks: code refactored
+import { useState } from "react"
+
+const Counter = props => {
+    const [counter, setCounter] = useState({ increment: 0, decrement: 100 })
+    return <div>
+        <h1>Increment {counter.increment} Decrement {counter.decrement}</h1>
+        <button onClick={() => {
+            setCounter(({ ...counter, increment: counter.increment + 1 }))
+        }}>+</button>
+        <button onClick={() => {
+            setCounter(({ ...counter, decrement: counter.decrement - 1 }))
+        }}>-</button>
+    </div>
+}
+
+export default function App() {
+    return <>
+        <Counter />
+    </>
+}
+...............................
+
+Objects,hooks,Immerjs:
+.......................
+import { produce } from "immer"
+import { useState } from "react"
+
+const Counter = props => {
+    const [counter, setCounter] = useState({ increment: 0, decrement: 100 })
+    return <div>
+        <h1>Increment {counter.increment} Decrement {counter.decrement}</h1>
+        <button onClick={() => {
+            //setCounter(({ ...counter, increment: counter.increment + 1 }))
+            setCounter(produce(counter, draft => {
+                draft.increment += 1
+            }))
+        }}>+</button>
+        <button onClick={() => {
+            // setCounter(({ ...counter, decrement: counter.decrement - 1 }))
+            setCounter(produce(counter, draft => {
+                draft.decrement -= 1
+            }))
+        }}>-</button>
+    </div>
+}
+
+export default function App() {
+    return <>
+        <Counter />
+    </>
+}
 
 
 
