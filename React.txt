@@ -1080,8 +1080,7 @@ function App() {
 }
 export default App;
 .....................................................................................................................................................................................................................................
-..........................................................................................................................................................
-						Styling
+											Styling
 ..........................................................................................................................................................
 
 web apps which are running inside browser, is based "CSS" styling language.
@@ -1202,9 +1201,9 @@ createRoot(document.getElementById('root')).render(
         <App />
     </StrictMode>,
 )
-...........................................................................................................................................................
+.......................................................................................................................................................................................................................................
 								conditional rendering
-...........................................................................................................................................................
+...........................................................................................................................................................................................................................................
 
 How to display UI based on condition? How we can use if..else or tenary operator?
 
@@ -1271,10 +1270,8 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-................................................................................
-				State Mutation getting started
-................................................................................
+									State Mutation getting started
+.................................................................................................................................................................................................................................
 
 How Component can change the data?
 
@@ -1375,8 +1372,7 @@ Yes, but no impact on ui update...
         console.log('onLike is clicked')
     }
 Note: render should be not called directly in order to update user interface..
-..............................................................................................
-.................................................................................
+..........................................................................................
 		Before writing code, we need to learn the concept
 .................................................................................
 		    Functional Programming principles
@@ -1470,7 +1466,7 @@ Rule B:
 .......
  if function receives input, what if i want to change(mutate),We can apply rule b.
  
-if function receives input,and modify input , we should return new object every time, which is called immutablity. 
+if function receives input, and modify input , we should return new object every time, which is called immutability. 
 
 
 //pure function Rule B
@@ -1504,7 +1500,7 @@ The above is not pure, it is impure.
 
  "I need to mutate state(data), but at the same time, i need purity"
 			
-	                  Apply Immutablity Principle
+	                  Apply Immutability Principle
 
 
 What is immutability?
@@ -1698,7 +1694,7 @@ Object.freeze(todos)
 console.log(add(todos, { title: 'Learn Microservices', done: false }));
 
 ....................................................................................
-			 React state mutation and pure functions
+								 React state mutation and pure functions
 .....................................................................................
 
 this.setState()
@@ -1804,7 +1800,236 @@ createRoot(document.getElementById('root')).render(
     </StrictMode>,
 )
 
+.................................................................................
+		Multi State variable
+.................................................................................
+import React from "react";
 
+
+class Review extends React.Component {
+
+    state = {
+        like: 0,
+        dislike: 0
+    }
+    //listener 
+    onLike = () => {
+        this.setState(prevState => {
+            return { ...prevState, like: prevState.like + 1 }
+        })
+    }
+    onDislike = () => {
+        this.setState(prevState => {
+            return { ...prevState, dislike: prevState.dislike + 1 }
+        })
+    }
+    render() {
+        return <div>
+            <h1>Review App</h1>
+            <h2>Like : {this.state.like}  Dislike : {this.state.dislike}</h2>
+            <button onClick={this.onLike}>Like</button>
+            <button onClick={this.onDislike}>Dislike</button>
+
+        </div>
+    }
+}
+
+function App() {
+    return <>
+        <Review />
+    </>
+}
+export default App;
+................................................................................
+								InLine Listeners
+...............................................................................
+import React from "react";
+
+
+class Review extends React.Component {
+    state = {
+        like: 0,
+        dislike: 0
+    }
+    render() {
+        return <div>
+            <h1>Review App</h1>
+            <h2>Like : {this.state.like}  Dislike : {this.state.dislike}</h2>
+            <button onClick={() => {
+                this.setState(prevState => {
+                    return { ...prevState, like: prevState.like + 1 }
+                })
+            }}>Like</button>
+            <button onClick={() => {
+                this.setState(prevState => {
+                    return { ...prevState, dislike: prevState.dislike + 1 }
+                })
+            }}>Dislike</button>
+
+        </div>
+    }
+}
+
+function App() {
+    return <>
+        <Review />
+    </>
+}
+export default App;
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+								Item Selection and State
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//list and listener: select item 
+
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import React from 'react'
+import PRODUCTS from './mock-data/products'
+
+class Products extends React.Component {
+    state = {
+        products: PRODUCTS,
+        selectedProduct: null
+    }
+
+    //method to get product data which is not listner
+    onProductSelected = (product) => {
+        // this.setState((prevState) => {
+        //     return {
+        //         ...prevState, selectedProduct: product
+        //     }
+        // })
+        this.setState(({ ...this.state, selectedProduct: product }))
+    }
+    render() {
+        return <div>
+            {
+                this.state.products.map(product => {
+                    return <section key={product.id}>
+                        <p style={{ cursor: 'pointer' }} onClick={() => {
+                            this.onProductSelected(product)
+                        }}>{product.title}</p>
+                    </section>
+                })
+            }
+            {this.state.selectedProduct ? <div>
+                <h1>Id : {this.state.selectedProduct.id}</h1>
+                <h2>Price :{this.state.selectedProduct.price}</h2>
+                <img src={this.state.selectedProduct.image} height={100} width={100} />
+            </div> : <h1>No Product Selected</h1>}
+
+        </div>
+    }
+}
+
+
+const App = () => {
+    return <>
+        <Products />
+    </>
+}
+
+createRoot(document.getElementById('root')).render(
+    <StrictMode>
+        <App />
+    </StrictMode>,
+)
+
+..................................................................................................
+			Component Composition: state as prop, listener as prop
+	   	     			(Dynamic Prop)
+..............................................................................................
+
+Yes,With Respect to "props" every function is pure.
+
+................................................................................
+	Component Composition: state as prop, listener as prop
+	   	     (Dynamic Prop)
+..............................................................................
+import React from "react";
+
+
+class Review extends React.Component {
+    state = {
+        like: 0,
+        dislike: 0
+    }
+    onLike = () => {
+        this.setState(prevState => {
+            return { ...prevState, like: prevState.like + 1 }
+        })
+    }
+    onDislike = () => {
+        this.setState(prevState => {
+            return { ...prevState, dislike: prevState.dislike + 1 }
+        })
+    }
+    render() {
+        return <ReviewDashboard {...this.state} onLike={this.onLike} onDislike={this.onDislike} />
+    }
+}
+const ReviewDashboard = props => {
+    return <div>
+        <h1>Review App</h1>
+        <h2>Like : {props.like}  Dislike : {props.dislike}</h2>
+        <button onClick={props.onLike}>Like</button>
+        <button onClick={props.onDislike}>Dislike</button>
+    </div>
+}
+
+function App() {
+    return <>
+        <Review />
+    </>
+}
+export default App;
+
+.......................................................................................................
+                            setState and Object Destructuring
+.....................................................................................................
+								
+import React from "react";
+
+
+class Review extends React.Component {
+    state = {
+        like: 0,
+        dislike: 0
+    }
+    onLike = () => {
+        // this.setState(prevState => {
+        //     return { ...prevState, like: prevState.like + 1 }
+        // })
+        // this.setState(prevState => ({ ...prevState, like: prevState.like + 1 }))
+
+        this.setState(({ ...this.state, like: this.state.like + 1 }))
+
+    }
+    onDislike = () => {
+        // this.setState(prevState => ({ ...prevState, dislike: prevState.dislike + 1 }))
+        this.setState(({ ...this.state, dislike: this.state.dislike + 1 }))
+
+    }
+    render() {
+        return <ReviewDashboard {...this.state} onLike={this.onLike} onDislike={this.onDislike} />
+    }
+}
+const ReviewDashboard = props => {
+    return <div>
+        <h1>Review App</h1>
+        <h2>Like : {props.like}  Dislike : {props.dislike}</h2>
+        <button onClick={props.onLike}>Like</button>
+        <button onClick={props.onDislike}>Dislike</button>
+    </div>
+}
+
+function App() {
+    return <>
+        <Review />
+    </>
+}
+export default App;
 
 
 

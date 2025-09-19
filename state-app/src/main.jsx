@@ -8,21 +8,22 @@ class Review extends React.Component {
         like: 0
     }
     onIncrement = () => {
-        // this.setState((prevState) => {
-        //     return { ...prevState, like: prevState.like + 1 }
-        // })
-        // this.setState((prevState) => ({ ...prevState, like: prevState.like + 1 }))
-        this.setState(({ ...this.state, like: this.state.like + 1 }))
+        this.setState((prevState) => {
+            return { ...prevState, like: prevState.like + 1 }
+        })
     }
-
     render() {
-        console.log('state inside Render : ', this.state)
-        return <div>
-            <h1>Review App</h1>
-            <h2>Like : {this.state.like}</h2>
-            <button onClick={this.onIncrement}>Like</button>
-        </div>
+        return <ReviewDetails {...this.state} onIncrement={this.onIncrement} />
     }
+}
+
+//child component to show UI, Where as parent component has state and biz logic
+const ReviewDetails = ({ like, onIncrement }) => {
+    return <div>
+        <h1>Review App</h1>
+        <h2>Like : {like}</h2>
+        <button onClick={onIncrement}>Like</button>
+    </div>
 }
 
 
