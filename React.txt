@@ -2164,7 +2164,7 @@ export default function App(){
     return <Customer/>
 }
 ..........................................................................................................................................................................................................................................
-					Update state using immutablity syntax and mutable syntax
+					Update state using immutability syntax and mutable syntax
 ......................................................................................................................................................................................................................................
 
 Immutablity syntax:
@@ -2196,7 +2196,7 @@ this.state.customer.contact.communcation.mobileNo = '343434343434'
 			     immer.js
 ..........................................................................................................................................................
 What is immer?
-  immer is simple js lib, which helps to write complex immutable code in "mutable way" like regular javascript way.
+  immer is simple js lib, which helps to write complex immutable code in "mutable way" like regular JavaScript way.
 
 
 immutable syntax to update object property:
@@ -2526,8 +2526,8 @@ createRoot(document.getElementById('root')).render(
         <App />
     </StrictMode>,
 )
-..........................................................................................................................................................................................................................................		Functional components, state,life cycle methods
-			   (Hooks)
+..........................................................................................................................................................................................................................................							Functional components, state,life cycle methods
+			  						 (Hooks)
 ....................................................................................
 
 
@@ -2537,9 +2537,9 @@ Hooks are simple javascript function which holds Component's logic outside compo
 
 	"Incase of class component , if you define a biz logic, the similar logic if you have in another component, we can't reuse."
 
-React 16 introduced a feature called hooks, by using hooks you can eleminate class components completly, by keeping functional components
+React 16 introduced a feature called hooks, by using hooks you can eliminate class components completely, by keeping functional components
 
-Hooks abstract complex  biz logic in reusable mannaer.
+Hooks abstract complex  biz logic in reusable manner.
 
 React provides lot of built in hooks to build app , as simple as possible , mean time you can create your own hooks (custom hooks).
 
@@ -2562,9 +2562,9 @@ Common Built in Hooks
 6.useCallback
 etc......
 
-Thanks to class components,goodbye to class components....
+Thanks to class components ,goodbye to class components....
 .....................................................................................
-State declaration,mutation:
+State declaration ,mutation:
 ...........................
 
 useState:
@@ -2573,7 +2573,7 @@ Syntax:
 
 const [state,setState]=useState(initalState)
 
-state -is just variable it could be any thing,represents current state
+state -is just variable it could be any thing, represents current state
 setState -  pure function its name generally setVariableName, A function that updates state
 
 const [counter,setCounter]=useState(initalState)
@@ -2749,7 +2749,197 @@ export default function App() {
         <Counter />
     </>
 }
+.................................................................................................................................................................................................
+.......................................................................................
+		CURD operations using hooks,forms,arrays
+........................................................................................
+import { produce } from "immer"
+import { useState } from "react"
 
+const Post = props => {
+    //inital data with some sample posts
+    const [posts, setPosts] = useState([
+        { id: 1, title: 'Post 1', body: 'this is firstPost' },
+        { id: 2, title: 'Post 2', body: 'this is secondPost' }
+    ])
+
+    //to handle forms
+    const [form, setForm] = useState({ title: '', body: '', id: null })
+
+    //to handle submit button either add or update
+    const [isEditing, setIsEditing] = useState(false)
+
+    const updatePost = () => {
+        setPosts(posts.map(post => (post.id === form.id ? form : post)));
+        setForm({ title: '', body: '', id: null })
+        setIsEditing(false)
+    }
+    const addPost = () => {
+        const newPost = { id: Date.now(), title: form.title, body: form.body }
+        setPosts([...posts, newPost])
+        //reset form
+        setForm({ title: '', body: '', id: null })
+    }
+
+    //listeners
+    const handleSubmit = e => {
+        e.preventDefault()
+        isEditing ? updatePost() : addPost()
+    }
+
+    const handleEdit = post => {
+        setForm({ title: post.title, body: post.body, id: post.id })
+        setIsEditing(true)
+    }
+
+    const deletePost = (id) => {
+        setPosts(posts.filter(post => post.id !== id))
+    }
+
+    return <div>
+        <h1>React CURD Application using Plain Array</h1>
+        {/* Form to add new Post */}
+        <form onSubmit={handleSubmit}>
+            <div>
+                <input
+                    type="text"
+                    placeholder="Title"
+                    value={form.title}
+                    required
+                    onChange={e => setForm({ ...form, title: e.target.value })}
+                />
+            </div>
+            <div>
+                <textarea
+                    placeholder="Body"
+                    value={form.body}
+                    required
+                    onChange={e => setForm({ ...form, body: e.target.value })}
+                />
+            </div>
+            <div>
+                <button type="submit">{isEditing ? 'Update' : 'Add'} Post</button>
+            </div>
+        </form>
+
+        {/* List of posts */}
+        <ul>
+            {
+                posts.map(post => {
+                    return <li key={post.id}>
+                        <h2>{post.title}</h2>
+                        <p>{post.body}</p>
+                        <button onClick={() => {
+                            handleEdit(post)
+                        }} >Edit</button>
+                        <button onClick={() => {
+                            deletePost(post.id)
+                        }} >Delete</button>
+                    </li>
+                })
+            }
+        </ul>
+    </div>
+}
+
+export default function App() {
+    return <>
+        <Post />
+    </>
+}		
+..............................................................................................
+				   component Life Cycles and Hooks
+.....................................................................................
+
+render,componentDidMount,componentDidUpdate,componentWillUnMount
+
+useEffect:
+comonentDidMount,componentDidupdate,componentWillUnMount
+    =>useEffect
+
+componentDidMount:
+useEffect(()=>{},[]) - useEffect(function,<dependency>)
+useEffect(()=>{})    - useEffect(function)
+
+ComponentDidUpdate
+useEffect(()=>{},[state])
+ here if state is updated, then this hook will be called
+
+
+import { StrictMode, useEffect, useState } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import { produce } from "immer"
+
+const Products = () => {
+    const initialState = {
+        products: [],
+        isLoading: false, //to show spinner
+        error: null
+    }
+    const [products, setProducts] = useState(initialState)
+
+    const fetchProducts = async () => {
+        try {
+            const url = `https://api.escuelajs.co/api/v1/products`
+            const response = await fetch(url)
+            const tmpProducts = await response.json()
+            setProducts(produce(products, (draft) => {
+                draft.products = tmpProducts,
+                draft.isLoading = true
+            }))
+            console.log(products)
+        }
+        catch (err) {
+            setProducts(produce(products, (draft) => {
+                draft.err = err
+                draft.isLoading = true
+            }))
+        }
+    }
+
+    useEffect(() => {
+        //api call 
+        fetchProducts()
+    }, [])
+
+     //conditional rendering: how to use if...else..elseif
+     if (products.error) {
+        return <div>
+            <h1>Error : {error.message}</h1>
+        </div>
+    } else if (!products.isLoading) {
+        return <h2>Loading...</h2>
+    } else {
+        return <div>
+            <h1>Products</h1>
+            <hr />
+            <div>
+                {
+                    products.products.map(product => {
+                        return <section>
+                            <img src={product.category.image} height={200} width={200} />
+                            <h1>{product.title} </h1>
+                            <p>{product.description}</p>
+                            <h5>{product.price}</h5>
+                        </section>
+                    })
+                }
+            </div>
+        </div>
+    }
+}
+
+
+const App = () => {
+    return <Products />
+}
+
+createRoot(document.getElementById('root')).render(
+    <StrictMode>
+        <App />
+    </StrictMode>,
+)
 
 
 
