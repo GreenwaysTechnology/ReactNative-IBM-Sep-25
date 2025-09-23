@@ -1,116 +1,212 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { configureStore } from '@reduxjs/toolkit';
-import { StrictMode, useState } from 'react'
+import { createAsyncThunk, createSlice, configureStore } from '@reduxjs/toolkit';
+import { StrictMode, useState,useEffect } from 'react'
 import { useSelector, useDispatch, Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client'
+import logger from 'redux-logger';
 
-const initialState = {
-    items: [
-        { id: 1, name: 'Item 1' },
-        { id: 2, name: 'Item 2' },
-    ],
-};
-const itemsSlice = createSlice({
-    name: 'items',
-    initialState,
-    reducers: {
-        addItem: (state, action) => {
-            const newItem = {
-                id: state.items.length > 0 ? state.items[state.items.length - 1].id + 1 : 1,
-                name: action.payload,
-            };
-            //immutable api
-            state.items.push(newItem);
-        },
-        updateItem: (state, action) => {
-            const { id, name } = action.payload;
-            const item = state.items.find((item) => item.id === id);
-            if (item) {
-                item.name = name;
-            }
-        },
-        deleteItem: (state, action) => {
-            state.items = state.items.filter((item) => item.id !== action.payload);
-        },
+///middleware for making api calls
+
+//Fetch users from the api
+//promise state variables are added automatically, to track promises
+//'users/fetchUsers/pending' or users/fetchUsers/completed ,users/fetchUsers/failed
+export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
+    const response = await fetch('https://jsonplaceholder.typicode.com/users')
+    return response.json()
+})
+
+// Add a new user
+export const addUser = createAsyncThunk('users/addUser', async (newUser) => {
+    const response = await fetch('https://jsonplaceholder.typicode.com/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newUser),
+    });
+    return response.json();
+});
+// Update an existing user
+export const updateUser = createAsyncThunk('users/updateUser', async ({ id, updatedUser }) => {
+    const response = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedUser),
+    });
+    return response.json();
+});
+// Delete a user
+export const deleteUser = createAsyncThunk('users/deleteUser', async (id) => {
+    await fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
+        method: 'DELETE',
+    });
+    return id;
+});
+//slice
+
+const usersSlice = createSlice({
+    name: 'users',
+    initialState: {
+        list: [],
+        status: 'idle', // idle | loading | succeeded | failed
+        error: null,
+    },
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            // Fetch Users
+            .addCase(fetchUsers.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchUsers.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.list = action.payload;
+            })
+            .addCase(fetchUsers.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+
+            // Add User
+            .addCase(addUser.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(addUser.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.list.push(action.payload);
+            })
+            .addCase(addUser.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+
+            // Update User
+            .addCase(updateUser.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(updateUser.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                const index = state.list.findIndex((user) => user.id === action.payload.id);
+                state.list[index] = action.payload;
+            })
+            .addCase(updateUser.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+
+            // Delete User
+            .addCase(deleteUser.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(deleteUser.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.list = state.list.filter((user) => user.id !== action.payload);
+            })
+            .addCase(deleteUser.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            });
     },
 });
-export const { addItem, updateItem, deleteItem } = itemsSlice.actions;
-export const itemsReducer = itemsSlice.reducer;
+
+const UserReducer = usersSlice.reducer
 
 export const store = configureStore({
     reducer: {
-        items: itemsReducer,
+        users: UserReducer,
     },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger)
 });
-const Item = () => {
-    const items = useSelector((state) => state.items.items);
-    const dispatch = useDispatch();
-    const [newItem, setNewItem] = useState('');
-    const [editingItem, setEditingItem] = useState(null);
-    const [editingName, setEditingName] = useState('');
 
-    const handleAdd = () => {
-        if (newItem.trim()) {
-            dispatch(addItem(newItem));
-            setNewItem('');
+function UserItem({ user, onEdit, onDelete }) {
+    return (
+        <li>
+            <span>{user.name} ({user.email})</span>
+            <button onClick={() => onEdit(user)}>Edit</button>
+            <button onClick={() => onDelete(user.id)}>Delete</button>
+        </li>
+    );
+}
+
+function Users() {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [editingUser, setEditingUser] = useState(null);
+
+    const { list: users, status, error } = useSelector((state) => state.users);
+    
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchUsers());
+    }, [dispatch]);
+
+    const handleAddOrUpdateUser = () => {
+        if (editingUser) {
+            dispatch(updateUser({ id: editingUser.id, updatedUser: { name, email } }));
+            setEditingUser(null);
+        } else {
+            dispatch(addUser({ name, email }));
         }
+        setName('');
+        setEmail('');
     };
 
-    const handleUpdate = (id) => {
-        if (editingName.trim()) {
-            dispatch(updateItem({ id, name: editingName }));
-            setEditingItem(null);
-            setEditingName('');
-        }
+    const handleEdit = (user) => {
+        setEditingUser(user);
+        setName(user.name);
+        setEmail(user.email);
+    };
+
+    const handleDelete = (id) => {
+        dispatch(deleteUser(id));
     };
 
     return (
-        <div style={{ padding: '20px' }}>
-            <h1>CRUD with Redux Toolkit</h1>
+        <div>
+            <h1>User Management</h1>
+
+            {/* Loading or Error Messages */}
+            {status === 'loading' && <p>Loading...</p>}
+            {status === 'failed' && <p style={{ color: 'red' }}>Error: {error}</p>}
+
+            {/* User Input */}
             <div>
                 <input
                     type="text"
-                    placeholder="Add new item"
-                    value={newItem}
-                    onChange={(e) => setNewItem(e.target.value)}
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                 />
-                <button onClick={handleAdd}>Add</button>
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <button onClick={handleAddOrUpdateUser}>
+                    {editingUser ? 'Update User' : 'Add User'}
+                </button>
             </div>
-            <ul>
-                {items.map((item) => (
-                    <li key={item.id}>
-                        {editingItem === item.id ? (
-                            <>
-                                <input
-                                    type="text"
-                                    value={editingName}
-                                    onChange={(e) => setEditingName(e.target.value)}
-                                />
-                                <button onClick={() => handleUpdate(item.id)}>Save</button>
-                                <button onClick={() => setEditingItem(null)}>Cancel</button>
-                            </>
-                        ) : (
-                            <>
-                                {item.name}{' '}
-                                <button onClick={() => {
-                                    setEditingItem(item.id);
-                                    setEditingName(item.name);
-                                }}>
-                                    Edit
-                                </button>{' '}
-                                <button onClick={() => dispatch(deleteItem(item.id))}>Delete</button>
-                            </>
-                        )}
-                    </li>
-                ))}
-            </ul>
+
+            {/* User List */}
+            {status === 'succeeded' && (
+                <ul>
+                    {users.map((user) => (
+                        <UserItem
+                            key={user.id}
+                            user={user}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
+                        />
+                    ))}
+                </ul>
+            )}
         </div>
     );
 }
 
+
 const App = () => {
     return <Provider store={store}>
-        <Item />
+        <Users />
     </Provider>
 };
 
