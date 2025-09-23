@@ -1,0 +1,344 @@
+                                      React Native
+.....................................................................................
+
+What is React Native?
+
+1.React Native is js lib for building native mobile apps 
+2.React Native combines the best parts of native development with React, a best-in-class  JavaScript library for building user interfaces.
+
+Mobile App development:
+
+Mobile apps are built using mobile platforms and os.
+
+Mobile platforms:
+1.Android
+2.Ios
+
+Mobile devices are acting front end devices, user interfaces communicates back end services.
+
+Dev:
+ 1.user interface developer/front end developer
+ 2.back end developer
+ 3.full stack developer.
+
+Front end developer who dev apps for  front devices.
+
+Dev generally build apps for desktops:
+  Standalone desktop apps
+  Browser based apps- javascript,html,css - react,angular,vue.....
+
+Mobile /Tab apps:
+ Dev builds apps for android platform using java , kotlin pl.
+ in iOS development, you use Swift or Objective-C.
+
+Types of mobile Apps:
+.....................
+
+1.Native Mobile
+2.Web apps
+3.Hybrid apps
+
+1.Native Mobile
+   Mobile apps are built by using native platform languages- java / Swift.
+2.Web apps
+   Apps built for browsers -Mobile browsers
+3.Hybrid  apps
+   built apps using JavaScript but it wont run inside browser, runs inside mobile using container(WebView).
+
+Hybrid apps:
+
+ Application built using javascript,css,html,looks like native apps.
+
+Why Hybrid Apps?
+
+-incase native apps, we need to maintain two code base for both platform.
+
+Why not to build one single portable app for all platforms?
+
+ That is birth of hybrid apps.
+
+Hybrids apps can be built using existing web tech- js,css,html.
+Js is simple dom language, how to access platform services such as contacts,networks,storage..
+- a lib was created -cordova , based on cordova adobe started building a framework on top of the cordova , called phoneGap.
+
+How to build mobile native apps in portable way using same javascript technology without html and css?
+
+....................................................................................
+ 			React Native Application Architecture
+....................................................................................
+react native is js lib inspired from react.
+
+react was created for browser apps
+
+react core features 
+-components
+-props
+-state
+-hooks
+-state management
+
+react native was not created like previous hybrid technology.
+
+react  +  native (android /ios)
+
+react is js  + native means platform
+
+User face:
+     Mark up - describes ui structure for eg  text box,buttons,images
+     logic  - describes how ui interacts with user
+..........................................................................................................................................................................................................................................
+									  React native and UI
+
+
+React Native================>Native Application
+ (react)                                            => android or ios
+   (js) ======================>Kotlin or swift
+
+layers:
+
+1.js layer
+	your code ui - components,biz logic,api calls
+        inside a js engine - Hermes
+
+2.bridge layer/communication layer
+    responsible for communication between js code and native layer
+    convers js code into native calls - c/c++ calls
+  
+2.native layer
+ ios - swift
+ android -kotlin/java
+native components-camera,gps,sensors and 
+
+Components of the react native:
+
+1.JSI - javascript interface
+
+2.Turbo modules
+
+3.Fabric
+
+
+React native applications are written using react(js) core principles
+ -Component
+ -Props
+ -State
+ -Event Handling
+ -hooks
+ -life cycle events
+
+Every react native apps are simple JavaScript code.
+
+In React Native, there is no webview concept. React native never run inside browser.
+
+ReactNative code base is classified into two category
+
+1.User Interface
+2.Application logic
+
+In Normal react js, User interface is written using HTML language, application logic is written using plain js(react js using state,events,props)...
+
+In React Native, User interface is written using "Mobile Elements", application logic is written using plain js(react js using state,events,props)...
+
+
+UI Mark Up code for React native:
+
+React native does not use html language to build ui elements.
+
+React Native provides a high level ui components already written, so we can use those
+components only .Why?
+
+We are building portable application either for android or ios.
+So we need generic concept for both  platforms. 
+For that React native provides a generic components for both platforms.
+
+What is it? What is happening during compilation?
+
+Source code is converted into another source code - Compilation.
+Another code is platform specific code. android code or ios code.
+if i wirte ui components, ui components will be converted to platform specific components.
+javascript code will be emitted as it is-app code.
+
+How react native apps are executed?  Execution Model:
+.....................................................
+
+All views are executed by platform runtimes eg: android by art.
+All javascript is executed by Hermes Js engine.
+https://hermesengine.dev/
+
+How to build react native apps?
+
+React native apps can be built using two work flows.
+
+
+1.Native Work flow
+ If you are already familiar with mobile development, you may want to use React Native CLI.
+ It requires Xcode or Android Studio to get started. If you already have one of these tools installed, you should be able to get up and running within a few minutes. If they are not installed, you should expect to spend about an hour installing and configuring them.
+
+2.Expo Work Flow.
+  If you are new to mobile development, the easiest way to get started is with Expo CLI. Expo is a set of tools built around React Native and, while it has many features, the most relevant feature for us right now is that it can get you writing a React Native app within minutes
+
+Native work flow:
+ 
+if you want to build professional mobile app you need lot of infrastructure.
+ UI Components
+    -Views,Text,Labels,ListViews,ScrollView,TabView...........
+
+React native core team provides all core components necessary to build mobile apps.
+
+What if i want more components which is not supported by react core team.
+
+YOu need to look at community or companies who provides professional mobile apps.
+
+-Community -https://reactnative.directory/
+
+
+Expo Work flow:
+...............
+What is expo?
+
+ Expo is a framework and a platform for universal React applications. It is a set of tools and services built around React Native and native platforms that help you develop, build, deploy, and quickly iterate on iOS, Android, and web apps from the same JavaScript/TypeScript codebase.
+.....................................................................................
+.....................................................................................
+Project Setup:
+
+.....................................................................................
+			ReactNative Project
+....................................................................................
+
+You can setup either using React Native cli or EXPO Cli.
+
+
+React Native cli:
+................
+
+Windows-Android:
+
+Requirements:
+
+Node js,
+React Native command line interface,
+JDK,
+Android Studio
+
+https://reactnative.dev/docs/environment-setup?guide=native&os=windows&platform=android
+
+
+npx @react-native-community/cli@latest init AwesomeProject
+
+When you create project and building project
+
+1.you should create project in powershell or bash shell with admin rights.
+
+
+npx @react-native-community/cli@latest init  MyReactNativeApp
+
+
+√ Downloading template
+√ Copying template
+√ Processing template
+√ Installing dependencies
+√ Initializing Git repository
+
+
+  Run instructions for Android:
+    • Have an Android emulator running (quickest way to get started), or a device connected.
+    • cd "G:\IBM\2024\Nov\ReactiveNative-B1\MyReactNativeApp" && npx react-native run-android
+
+  Run instructions for Windows:
+    • See https://aka.ms/ReactNativeGuideWindows for the latest up-to-date instructions.
+
+
+How to run react native project either for android or ios
+
+Way 1
+npx react-native run-android or npx react-native run-ios
+
+Way 2
+
+npm run android or npm run ios
+
+Way 3
+
+npm start
+ 
+ios - i
+android - a
+......................................................................................................
+Compiler Configuration:
+
+React Native uses different compilers
+
+1.babel
+  convert jsx code into java script
+2.Metro Bundler -https://facebook.github.io/metro/
+  Convert React native code into Platform specific code..
+
+config files:
+
+1.package.json
+   This is project configuration files 
+ -scripts
+      "android": "react-native run-android",
+      "ios": "react-native run-ios",
+      "start": "react-native start",
+   How to use this script?
+    npm run android -->which deploys apps in android
+    npm run ios --->which deploys apps in ios 
+    npm start --> which shows options and later you can select env
+
+ -dependencies
+	react  - contains core react features-components,props,state,events
+	react-native -contains core react native/mobile compoents and apis
+
+
+2.tsconfig.json
+   By default , react native apps enables type script support which is super set of java script language.
+
+3.metro.config.js
+  Metro bundler configuration, metro is responsible for converting js code into native code.
+
+4.jest.config.js
+   Unit testing and e2e testing setup.
+
+5.app.json 
+  This is file where you can configure application properties
+
+6. .eslintrc.json
+   This is file which contains linting rules - static code analysis rules.
+
+7. babel.config.js
+    jsx compiler configuration, which converts jsx code into javascript..
+
+
+Folders:
+........
+node_modules
+   Contains libs and framework code
+.bundle 
+   contains bundled executable code
+Andorid
+IOS
+....................................................................................
+How to build the project?
+
+npm run android
+or
+npx react-native run-android
+or 
+npm start
+
+....................................................................................
+
+Entry file:
+
+index.js
+
+import {AppRegistry} from 'react-native';
+import App from './App';
+import {name as appName} from './app.json';
+
+AppRegistry.registerComponent(appName, () => App);
+		|
+               Mounting root Component
+
+Root Component is always App Component.
