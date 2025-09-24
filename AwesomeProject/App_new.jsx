@@ -1,0 +1,62 @@
+import React from 'react';
+import { StatusBar, StyleSheet, useColorScheme, View, Text } from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+
+function App() {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  return (
+    <SafeAreaProvider>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <AppContent isDarkMode={isDarkMode} />
+    </SafeAreaProvider>
+  );
+}
+
+function AppContent({ isDarkMode }) {
+  const insets = useSafeAreaInsets();
+  return (
+    <View
+      style={[
+        styles.container,
+        {
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+          backgroundColor: isDarkMode ? '#121212' : '#fff',
+        },
+      ]}
+    >
+      <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>
+        🚀 Welcome to My React Native App!
+      </Text>
+      <Text style={[styles.subtitle, { color: isDarkMode ? '#aaa' : '#555' }]}>
+        Start editing <Text style={styles.code}>App.tsx</Text> to see your changes.
+      </Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  code: {
+    fontWeight: 'bold',
+    color: '#61dafb',
+  },
+});
+
+export default App;

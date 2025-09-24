@@ -47,7 +47,7 @@ Types of mobile Apps:
 
 Hybrid apps:
 
- Application built using javascript,css,html,looks like native apps.
+ Application built using java script, css ,html ,looks like native apps.
 
 Why Hybrid Apps?
 
@@ -342,3 +342,1130 @@ AppRegistry.registerComponent(appName, () => App);
                Mounting root Component
 
 Root Component is always App Component.
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+										React Native Core Components
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+React Native provides lot of built in components which directly is mapped against Mobile user interfaces
+
+Basic Components:
+1.Text
+2.View
+3.Image
+3.TextInput
+4.ScrollView
+5.Pressable
+6.StyleSheet
+
+User Interface Components
+
+1.Button
+2.Switch
+
+ListView 
+1.FlatList
+2.SectionList
+
+Others:
+1.Activity Indicator
+2.Alert
+3.StatusBar
+4.Modal
+5.TouchableHighlight
+6.TouchableOpacity
+7.ImageBackground
+etc...
+
+The above components are provided by core react native team, apart from if you want any component you can install from reactnative community.
+
+
+According to react native version 0.81.4, The App Component must have "SafeArea Provider" which is should be root Component
+
+SafeAreaProvider:
+
+SafeAreaProvider which is from react-native-safe-area-context
+
+SafeAreaView: 
+  	It is from React native core lib but now this api has been deprecated and replaced by SafeAreaProvider
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+SafeAreaView:
+ comes built in with react native  import {SafeAreaView} from 'react-native';
+
+What is it?
+   It ensures that content "does not overlap system UI"
+	-Notch (iPhone x and above)
+       -status bar
+      -Home indicator (IOS bottom bar)
+
+Platform support:
+   Works reliably on IOS
+   On Android behaviour is very limited some times it ignores
+
+You can use this when you dont care about android cutouts.
+
+SafeAreaProvider:
+
+1.Context Provider you wrap your app with.
+2.Calculates intsets (top,bottom,left,right) based on the device's safe
+    insets:
+       are padding values that tell your app how much space it needs to avoid overlapping with system level user interface elements or physical
+       devices features
+3.Need only once at the root of your app
+
+useSafeAreaIntsets hooks:
+   ->Gives you extact values for top/bottom/left/right padding
+   ->Lets you manually apply insets (eg custom headers/footers)
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+											StatusBar
+
+What is the Status bar?
+The Status bar is area at the top of the screen(battery,time,wi-fi,etc)
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+										NewAppScreen
+
+
+It is package is maintained by the react native team that provides the default Welcome Screen UI you see when you create new React native native project.
+
+If you start writing your own ui, you can remove this.
+
+
+Final Code:
+
+App.jsx
+import React from 'react';
+import { StatusBar, StyleSheet, useColorScheme, View, Text } from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+
+function App() {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  return (
+    <SafeAreaProvider>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <AppContent isDarkMode={isDarkMode} />
+    </SafeAreaProvider>
+  );
+}
+
+function AppContent({ isDarkMode }) {
+  const insets = useSafeAreaInsets();
+  return (
+    <View
+      style={[
+        styles.container,
+        {
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+          backgroundColor: isDarkMode ? '#121212' : '#fff',
+        },
+      ]}
+    >
+      <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>
+        🚀 Welcome to My React Native App!
+      </Text>
+      <Text style={[styles.subtitle, { color: isDarkMode ? '#aaa' : '#555' }]}>
+        Start editing <Text style={styles.code}>App.tsx</Text> to see your changes.
+      </Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  code: {
+    fontWeight: 'bold',
+    color: '#61dafb',
+  },
+});
+
+export default App;
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+											Style sheet
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+React Native offers styles via javascript css sytle syntax.
+React native converts styles according platform - android styles or ios styles
+
+StyleSheet:
+
+ It is component used to create and apply styles
+
+How to create style sheet:
+
+Syntax:
+ const styles= StyleSheet.create(styleconfigObject)
+
+here styles refers the object which contains the style properties
+
+StyleConfig Object:
+   Describes css style properties
+
+StyleSheet.create({
+   key: { 
+	cssProp:value
+   }
+})
+
+Key is category of style and value is style config
+Key can be any name which represents your category
+like:
+  container,text,label,List,images
+
+const styles = StyleSheet.create({
+   container:{ 
+	 backgroundColor:'#ff000080'
+         flex:1
+   },
+   text: {}
+})
+
+if you want to apply to any element(Componet)
+
+ <View style={styles.container} />
+ 
+<Text style={styles.text}></Text>
+
+The above is resuable , if you want to use inline style
+
+<Text style={{color:'red'}}>Hello</Text>
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&											Coimbing mutiple styles
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+Lets say i have declared the below style
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  code: {
+    fontWeight: 'bold',
+    color: '#61dafb',
+  },
+});
+
+Syntax
+<Text style={ [styles.title + extra style] }>Hello</Text>
+<Text style={ [styles.title ,{color:'red'} ]}>Hello</Text>
+
+import React from 'react';
+import { StatusBar, StyleSheet, useColorScheme, View, Text } from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+
+function App() {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  return (
+    <SafeAreaProvider>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <AppContent isDarkMode={isDarkMode} />
+    </SafeAreaProvider>
+  );
+}
+
+function AppContent({ isDarkMode }) {
+  const insets = useSafeAreaInsets();
+  return (
+    <View
+      style={[
+        styles.container,
+        {
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+          backgroundColor: isDarkMode ? '#121212' : '#fff',
+        },
+      ]}
+    >
+      <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>
+        🚀 Welcome to My React Native App!
+      </Text>
+      <Text style={[styles.subtitle, { color: isDarkMode ? '#aaa' : '#555' }]}>
+        Start editing <Text style={styles.code}>App.tsx</Text> to see your changes.
+      </Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  code: {
+    fontWeight: 'bold',
+    color: '#61dafb',
+  },
+});
+
+export default App;
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+										Device Color Scheme
+************************************************************************************************************************************************************
+
+In React Native, useColorScheme is a built in react hook that lets you detect whether the user device is currently using light mode or dark mode
+
+useColorScheme() is dervied "Appearance" from react native core package
+
+It detects the systems native color
+ 
+light -  if system is in light mode - white background,black text
+dark - if system is in dark mode - black background, white text
+null  - default color 
+
+import React from 'react';
+import { StatusBar, StyleSheet, useColorScheme, View, Text } from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+
+function Greet({isDarkMode}) {
+    return <>
+       <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>
+        🚀 Welcome to My React Native App!
+      </Text>
+    </>
+}
+
+function App() {
+    const isDarkMode = useColorScheme() === 'dark';
+    console.log('mode',isDarkMode)
+    return (
+        <SafeAreaProvider>
+            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+            <AppContent isDarkMode={isDarkMode} />
+        </SafeAreaProvider>
+    );
+}
+
+function AppContent({ isDarkMode }) {
+    const insets = useSafeAreaInsets();
+    return (
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                    backgroundColor: isDarkMode ? '#121212' : '#fff',
+                },
+            ]}
+        >
+            {/* Child Component */}
+            <Greet isDarkMode={isDarkMode} />
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: '700',
+        marginBottom: 8,
+    },
+    subtitle: {
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    code: {
+        fontWeight: 'bold',
+        color: '#61dafb',
+    },
+});
+
+export default App;
+********************************************************************************************************************************************************
+										Component Composition
+
+
+components/User.jsx
+import { View, Text } from "react-native"
+export default function User(props) {
+    const { id, name } = props
+    return <View>
+        <Text>Id : {id}</Text>
+        <Text>Name : {name}</Text>
+    </View>
+}
+
+App.jsx
+import { StatusBar, StyleSheet, useColorScheme, View, Text } from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import User from './components/User';
+
+
+function App() {
+    const isDarkMode = useColorScheme() === 'dark';
+    console.log('mode',isDarkMode)
+    return (
+        <SafeAreaProvider>
+            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+            <AppContent isDarkMode={isDarkMode} />
+        </SafeAreaProvider>
+    );
+}
+
+function AppContent({ isDarkMode }) {
+    const insets = useSafeAreaInsets();
+    return (
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                    backgroundColor: isDarkMode ? '#121212' : '#fff',
+                },
+            ]}
+        >
+            {/* Child Component */}
+            <User id={1} name='Subramanian'/>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: '700',
+        marginBottom: 8,
+    },
+    subtitle: {
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    code: {
+        fontWeight: 'bold',
+        color: '#61dafb',
+    },
+});
+
+export default App;
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+								    Styles Abstractions
+
+styles/index.jsx
+import { StyleSheet } from "react-native"
+
+export const styles = StyleSheet.create({
+    title: {
+        color: 'blue'
+    }
+})
+
+components/User.jsx
+import { View, Text, StyleSheet } from "react-native"
+import { styles } from "../styles"
+
+export default function User(props) {
+    const { id, name } = props
+    return <View>
+        <Text style={[styles.title]}>Id : {id}</Text>
+        <Text>Name : {name}</Text>
+    </View>
+}
+
+// const styles = StyleSheet.create({
+//     title: {
+//         color: 'blue'
+//     }
+// })
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+										State and React Native
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Component : Button
+
+components/Counter.jsx
+import { useState } from "react";
+import { View, Text, Button } from "react-native";
+
+export function Counter() {
+    const [counter, setCounter] = useState(0)
+
+    const onIncrement = () => {
+        setCounter(counter + 1)
+    }
+    return <View>
+        <Text>Counter : {counter}</Text>
+        <Button title="Increment" onPress={onIncrement} />
+    </View>
+}
+
+App.jsx
+import { StatusBar, StyleSheet, useColorScheme, View, Text } from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Counter } from './components/Counter';
+
+
+function App() {
+    const isDarkMode = useColorScheme() === 'dark';
+    console.log('mode',isDarkMode)
+    return (
+        <SafeAreaProvider>
+            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+            <AppContent isDarkMode={isDarkMode} />
+        </SafeAreaProvider>
+    );
+}
+
+function AppContent({ isDarkMode }) {
+    const insets = useSafeAreaInsets();
+    return (
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                    backgroundColor: isDarkMode ? '#121212' : '#fff',
+                },
+            ]}
+        >
+        <Counter/>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: '700',
+        marginBottom: 8,
+    },
+    subtitle: {
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    code: {
+        fontWeight: 'bold',
+        color: '#61dafb',
+    },
+});
+
+export default App;
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+											API Calls and React Native
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+components/Products.jsx
+import { produce } from 'immer'
+import { useEffect, useState } from 'react'
+import { View, Text } from 'react-native'
+
+function ProductList() {
+    const [products, setProducts] = useState({ products: [], isLoading: false, error: null })
+    async function fetchProducts() {
+        try {
+            const url = `https://api.escuelajs.co/api/v1/products`
+            const response = await fetch(url)
+            const tmpProducts = await response.json()
+            setProducts(produce(products, (draft) => {
+                draft.products = tmpProducts
+                draft.isLoading = true
+            }))
+        }
+        catch (err) {
+            setProducts(produce(products, (draft) => {
+                draft.err = err
+                draft.isLoading = true
+            }))
+        }
+    }
+    //componentDidMount
+    useEffect(() => {
+        //any async task
+        fetchProducts()
+    }, [])
+    //conditional rendering: how to use if...else..elseif
+    if (products.error) {
+        return <View>
+            <Text>Error : {error.message}</Text>
+        </View>
+    } else if (!products.isLoading) {
+        return <Text>Loading...</Text>
+    } else {
+        return <View>
+            <View>
+                {
+                    products.products.map(product => {
+                        return <View  key={product.id}>
+                            <Text>{product.title} </Text>
+                        </View>
+                    })
+                }
+            </View>
+        </View>
+    }
+}
+export { ProductList }
+
+App.jsx
+import { StatusBar, StyleSheet, useColorScheme, View, Text } from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ProductList } from './components/Products';
+
+
+function App() {
+    const isDarkMode = useColorScheme() === 'dark';
+    console.log('mode',isDarkMode)
+    return (
+        <SafeAreaProvider>
+            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+            <AppContent isDarkMode={isDarkMode} />
+        </SafeAreaProvider>
+    );
+}
+
+function AppContent({ isDarkMode }) {
+    const insets = useSafeAreaInsets();
+    return (
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                    backgroundColor: isDarkMode ? '#121212' : '#fff',
+                },
+            ]}
+        >
+        <ProductList/>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        // alignItems: 'center',
+        // justifyContent: 'center',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: '700',
+        marginBottom: 8,
+    },
+    subtitle: {
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    code: {
+        fontWeight: 'bold',
+        color: '#61dafb',
+    },
+});
+
+export default App;
+
+
+In the code, you can note down the product has rendered but there is no scroll bar is attached so that we cant view the items beyond the current screen.
+
+
+....................................................................................................................................................................................................................................................
+									 Container Components
+....................................................................................................................................................................................................................................................
+
+Container components are components which contains other components which is called "View" in React Native.
+
+Types of Views:
+
+1.View
+2.ScrollView
+3.ListView
+4.SectionList
+
+....................................................................................................................................................................................................................................................
+								         	Scroll Behaviour
+.................................................................................................................................................................................................................................................
+View is going to hold child elements, act as container
+ScrollView is also container but has default scroll bar is added
+
+components/products.jsx
+import { produce } from 'immer'
+import { useEffect, useState } from 'react'
+import { View, Text, ScrollView, StyleSheet } from 'react-native'
+
+function ProductList() {
+    const [products, setProducts] = useState({ products: [], isLoading: false, error: null })
+    async function fetchProducts() {
+        try {
+            const url = `https://api.escuelajs.co/api/v1/products`
+            const response = await fetch(url)
+            const tmpProducts = await response.json()
+            setProducts(produce(products, (draft) => {
+                draft.products = tmpProducts
+                draft.isLoading = true
+            }))
+        }
+        catch (err) {
+            setProducts(produce(products, (draft) => {
+                draft.err = err
+                draft.isLoading = true
+            }))
+        }
+    }
+    //componentDidMount
+    useEffect(() => {
+        //any async task
+        fetchProducts()
+    }, [])
+    //conditional rendering: how to use if...else..elseif
+    if (products.error) {
+        return <View>
+            <Text style={styles.label}>Error : {error.message}</Text>
+        </View>
+    } else if (!products.isLoading) {
+        return <Text style={styles.label}>Loading...</Text>
+    } else {
+        return   <ScrollView>
+            {
+                products.products.map(product => {
+                    return <Text key={product.id} style={[styles.label]}>{product.title} </Text>
+                })
+            }
+        </ScrollView>
+    }
+}
+export { ProductList }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'pink',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    label: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'blue',
+        alignItems:'center',
+        justifyContent:'center'
+    }
+})
+
+App.jsx
+import { StatusBar, StyleSheet, useColorScheme, View, Text } from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ProductList } from './components/Products';
+
+
+function App() {
+    const isDarkMode = useColorScheme() === 'dark';
+    console.log('mode',isDarkMode)
+    return (
+        <SafeAreaProvider>
+            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+            <AppContent isDarkMode={isDarkMode} />
+        </SafeAreaProvider>
+    );
+}
+
+function AppContent({ isDarkMode }) {
+    const insets = useSafeAreaInsets();
+    return (
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                    backgroundColor: isDarkMode ? '#121212' : '#fff',
+                },
+            ]}
+        >
+        <ProductList/>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        // alignItems: 'center',
+        // justifyContent: 'center',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: '700',
+        marginBottom: 8,
+    },
+    subtitle: {
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    code: {
+        fontWeight: 'bold',
+        color: '#61dafb',
+    },
+});
+
+export default App;
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+										FlatList
+............................................................................................................................................................
+				        List Views
+.........................................................................................................................................................
+
+React Native provides a suit of components for presenting lists of data, Generally, You will want to use "FlatList or Section List"
+
+
+FlatList:
+ It displays a scrolling list of changining, but similary structured data.
+ FlatList works well for long list of data , where number of items change over time.
+ 
+When compare to ScrollView,The FlatList only renders elements that are currently showing on the screen, not all the elements at onces.
+
+
+
+FlatList is similar to array.map in react.
+
+FlatList requires two properties:
+
+1.data
+  data Source
+2.renderItem
+  takes one item from the source and returns a formtted component to render.
+
+FlatList with HardCoded data.
+.............................
+<FlatList data={dataSource} renderItem={(obj)=>{
+  return<Text>{obj.item.dataSource.property}</Text>
+}}
+
+data->Data Prop is called datasource which is plain array
+renderItem -
+  Takes an item from data prop and renders it into list
+
+renderItem({
+ item:ItemObject(todo,contact),
+ index:number,
+ separators:{
+
+ }
+})
+
+App.jsx
+import { StatusBar, StyleSheet, useColorScheme, View, Text } from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ProductList } from './components/Products';
+
+
+function App() {
+    const isDarkMode = useColorScheme() === 'dark';
+    console.log('mode',isDarkMode)
+    return (
+        <SafeAreaProvider>
+            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+            <AppContent isDarkMode={isDarkMode} />
+        </SafeAreaProvider>
+    );
+}
+
+function AppContent({ isDarkMode }) {
+    const insets = useSafeAreaInsets();
+    return (
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                    backgroundColor: isDarkMode ? '#121212' : '#fff',
+                },
+            ]}
+        >
+        <ProductList/>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        // alignItems: 'center',
+        // justifyContent: 'center',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: '700',
+        marginBottom: 8,
+    },
+    subtitle: {
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    code: {
+        fontWeight: 'bold',
+        color: '#61dafb',
+    },
+});
+
+export default App;
+
+components/Products.jsx
+
+import { produce } from 'immer'
+import { useEffect, useState } from 'react'
+import { View, Text, ScrollView, StyleSheet, FlatList } from 'react-native'
+
+function ProductList() {
+    const [products, setProducts] = useState({ products: [], isLoading: false, error: null })
+    async function fetchProducts() {
+        try {
+            const url = `https://api.escuelajs.co/api/v1/products`
+            const response = await fetch(url)
+            const tmpProducts = await response.json()
+            setProducts(produce(products, (draft) => {
+                draft.products = tmpProducts
+                draft.isLoading = true
+            }))
+        }
+        catch (err) {
+            setProducts(produce(products, (draft) => {
+                draft.err = err
+                draft.isLoading = true
+            }))
+        }
+    }
+    //componentDidMount
+    useEffect(() => {
+        //any async task
+        fetchProducts()
+    }, [])
+    //conditional rendering: how to use if...else..elseif
+    if (products.error) {
+        return <View>
+            <Text style={styles.label}>Error : {error.message}</Text>
+        </View>
+    } else if (!products.isLoading) {
+        return <Text style={styles.label}>Loading...</Text>
+    } else {
+        return <FlatList
+            data={products.products}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => <Text style={[styles.label]}>{item.title}</Text>}
+        />
+    }
+}
+export { ProductList }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'pink',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    label: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'blue',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+})
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+										  Spinner - ActivityIndicator
+..........................................................................................................................................................................................................................................
+Displays a circular loading indicator.
+
+
+components/Products.jsx
+import { produce } from 'immer'
+import { useEffect, useState } from 'react'
+import { View, Text, ScrollView, StyleSheet, FlatList,ActivityIndicator } from 'react-native'
+
+function ProductList() {
+    const [products, setProducts] = useState({ products: [], isLoading: false, error: null })
+    async function fetchProducts() {
+        try {
+            const url = `https://api.escuelajs.co/api/v1/products`
+            const response = await fetch(url)
+            const tmpProducts = await response.json()
+            setProducts(produce(products, (draft) => {
+                draft.products = tmpProducts
+                draft.isLoading = true
+            }))
+        }
+        catch (err) {
+            setProducts(produce(products, (draft) => {
+                draft.err = err
+                draft.isLoading = true
+            }))
+        }
+    }
+    //componentDidMount
+    useEffect(() => {
+        //any async task
+        fetchProducts()
+    }, [])
+    //conditional rendering: how to use if...else..elseif
+    if (products.error) {
+        return <View >
+            <Text style={styles.label}>Error : {error.message}</Text>
+        </View>
+    } else if (!products.isLoading) {
+        return <View style={styles.container}>
+              <ActivityIndicator  size="large" color="#00ff00"/>
+        </View>
+    } else {
+        return <FlatList
+            data={products.products}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => <Text style={[styles.label]}>{item.title}</Text>}
+        />
+    }
+}
+export { ProductList }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+
+        backgroundColor: 'pink',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    label: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'blue',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+})
+
+App.jsx
+import { StatusBar, StyleSheet, useColorScheme, View, Text } from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ProductList } from './components/Products';
+
+
+function App() {
+    const isDarkMode = useColorScheme() === 'dark';
+    console.log('mode',isDarkMode)
+    return (
+        <SafeAreaProvider>
+            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+            <AppContent isDarkMode={isDarkMode} />
+        </SafeAreaProvider>
+    );
+}
+
+function AppContent({ isDarkMode }) {
+    const insets = useSafeAreaInsets();
+    return (
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                    backgroundColor: isDarkMode ? '#121212' : '#fff',
+                },
+            ]}
+        >
+        <ProductList/>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        // alignItems: 'center',
+        // justifyContent: 'center',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: '700',
+        marginBottom: 8,
+    },
+    subtitle: {
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    code: {
+        fontWeight: 'bold',
+        color: '#61dafb',
+    },
+});
+
+export default App;
+
+
+
+
+
+
+
