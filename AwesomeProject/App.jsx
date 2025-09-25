@@ -27,7 +27,6 @@ function ProductList() {
         data={data}
         keyExtractor={(item) => item.id}
         numColumns={2}
-        contentContainerStyle={styles.container}
         renderItem={({ item }) => {
             return <View>
                 <Image style={{borderRadius:8}} source={{ uri: item.image }} alt={item.title} resizeMode="contain" height={240}
