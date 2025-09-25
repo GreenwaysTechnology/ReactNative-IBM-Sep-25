@@ -1,44 +1,48 @@
-import React from 'react';
-import { StatusBar, StyleSheet, SectionList, useColorScheme, View, Text } from 'react-native';
+import { StatusBar, StyleSheet, useColorScheme, View, Text, FlatList, Image } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useState, useEffect } from 'react'
 
-const DATA = [
-    {
-        title: "A",
-        data: ["Apple", "Avocado"]
-    },
-    {
-        title: "B",
-        data: ["Banana", "Blueberry", "Blackberry", "Banana", "Blueberry", "Blackberry", "Banana", "Blueberry", "Blackberry", "Banana", "Blueberry", "Blackberry", "Banana", "Blueberry", "Blackberry", "Banana", "Blueberry", "Blackberry", "Banana", "Blueberry", "Blackberry", "Banana", "Blueberry", "Blackberry", "Banana", "Blueberry", "Blackberry"]
-    },
-    {
-        title: "C",
-        data: ["Cherry", "Coconut"]
-    }
-];
+function ProductList() {
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-function MySectionList() {
+    useEffect(() => {
+        async function init() {
+            try {
+                const response = await fetch("https://fakestoreapi.com/products");
+                if (!response.ok) throw new Error("Network response was not ok");
+                const result = await response.json();
+                setData(result);
+            } catch (err) {
+                setError("Failed to fetch data");
+            } finally {
+                setLoading(false);
+            }
+        }
+        init()
+    }, [])
 
-    return <SectionList
-        sections={DATA}
-        keyExtractor={(item, index) => item + index}
-        stickySectionHeadersEnabled={true}  
-        renderItem={({ item }) => (
-            <Text style={styles.item}>{item}</Text>
-        )}
-        renderSectionHeader={({ section: { title } }) => (
-            <Text style={styles.header}>{title}</Text>
-        )}
-
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        SectionSeparatorComponent={() => <View style={styles.sectionSeparator} />}
-        ListHeaderComponent={() => <Text style={styles.listHeader}>Fruits List</Text>}
-        ListFooterComponent={() => <Text style={styles.listFooter}>End of List</Text>}
+    return <FlatList
+        data={data}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        contentContainerStyle={styles.container}
+        renderItem={({ item }) => {
+            return <View>
+                <Image style={{borderRadius:8}} source={{ uri: item.image }} alt={item.title} resizeMode="contain" height={240}
+                    width={250}
+                />
+            </View>
+        }}
     />
+
+
 }
+
 function App() {
     const isDarkMode = useColorScheme() === 'dark';
-    console.log('mode', isDarkMode)
+
     return (
         <SafeAreaProvider>
             <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
@@ -61,48 +65,29 @@ function AppContent({ isDarkMode }) {
                     backgroundColor: isDarkMode ? '#121212' : '#fff',
                 },
             ]}
-
         >
-        <MySectionList/>
+            <ProductList />
         </View>
     );
 }
 
-export default App;
-
 const styles = StyleSheet.create({
     container: {
+        flex: 1
+    },
+    image: {
         flex: 1,
+        borderRadius:8,
+        justifyContent: 'center',
     },
-    header: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        backgroundColor: '#f0f0f0',
-        padding: 5,
-    },
-    item: {
-        fontSize: 18,
-        padding: 10,
-    },
-    separator: {
-        height: 1,
-        backgroundColor: '#ddd',
-        marginLeft: 10,
-    },
-    sectionSeparator: {
-        height: 5,
-        backgroundColor: '#ccc',
-    },
-    listHeader: {
-        fontSize: 24,
+    text: {
+        color: 'white',
+        fontSize: 42,
+        lineHeight: 84,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginVertical: 10,
-    },
-    listFooter: {
-        fontSize: 18,
-        textAlign: 'center',
-        marginVertical: 10,
-        color: 'gray',
+        backgroundColor: '#000000c0',
     },
 });
+
+export default App;
