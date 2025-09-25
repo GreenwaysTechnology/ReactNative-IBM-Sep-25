@@ -2222,10 +2222,474 @@ export default App;
 								How to get Input from the User
 
 
+import React, { useState } from 'react';
+import {
+  StatusBar,
+  StyleSheet,
+  useColorScheme,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+
+function App() {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  return (
+    <SafeAreaProvider>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <AppContent isDarkMode={isDarkMode} />
+    </SafeAreaProvider>
+  );
+}
+
+function AppContent({ isDarkMode }) {
+  const insets = useSafeAreaInsets();
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleRegister = () => {
+    if (!name || !email || !password) {
+      Alert.alert('Error', 'Please fill all fields');
+      return;
+    }
+    Alert.alert('Success', `Welcome, ${name}! Your account is created.`);
+  };
+
+  return (
+    <View
+      style={[
+        styles.container,
+        {
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+          backgroundColor: isDarkMode ? '#121212' : '#fff',
+        },
+      ]}
+    >
+      <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>
+        🚀 Registration Form
+      </Text>
+
+      {/* Full Name */}
+      <TextInput
+        style={[
+          styles.input,
+          { backgroundColor: isDarkMode ? '#1e1e1e' : '#f9f9f9', color: isDarkMode ? '#fff' : '#000' },
+        ]}
+        placeholder="Full Name"
+        placeholderTextColor={isDarkMode ? '#aaa' : '#555'}
+        value={name}
+        onChangeText={setName}
+      />
+
+      {/* Email */}
+      <TextInput
+        style={[
+          styles.input,
+          { backgroundColor: isDarkMode ? '#1e1e1e' : '#f9f9f9', color: isDarkMode ? '#fff' : '#000' },
+        ]}
+        placeholder="Email Address"
+        placeholderTextColor={isDarkMode ? '#aaa' : '#555'}
+        keyboardType="email-address"
+        value={email}
+        onChangeText={setEmail}
+      />
+
+      {/* Password */}
+      <TextInput
+        style={[
+          styles.input,
+          { backgroundColor: isDarkMode ? '#1e1e1e' : '#f9f9f9', color: isDarkMode ? '#fff' : '#000' },
+        ]}
+        placeholder="Password"
+        placeholderTextColor={isDarkMode ? '#aaa' : '#555'}
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
+
+      {/* Register Button */}
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: isDarkMode ? '#61dafb' : '#007bff' }]}
+        onPress={handleRegister}
+      >
+        <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  input: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 15,
+  },
+  button: {
+    width: '100%',
+    padding: 15,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+});
+
+export default App;
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+									  React Native Navigation
+.....................................................................................................................................................................................................................................................
+			
+How navigation works?
+
+In a web browser, you can link to different pages using an anchor (<a>) tag. When the user clicks on a link, the URL is pushed to the browser history stack.
+
+ When the user presses the back button, the browser pops the item from the top of the history stack, so the active page is now the previously visited page.
+
+React Native doesn't have a built-in idea of a global history stack like a web browser does -- this is where React Navigation enters the story.
+
+React Native Navigation's stack navigator provides a way for your app to transition between screens and manage navigation history.
+
+If your app uses only one stack navigator then it is conceptually similar to how a web browser handles navigation state - your app pushes and pops items from the navigation stack as users interact with it, and this results in the user seeing different screens. 
+
+A key difference between how this works in a web browser and in React Navigation is that React Navigation's stack navigator provides the gestures and animations that you would expect on Android and iOS when navigating between routes in the stack.
+
+Types of Navigations:
+1.Stack Navigation
+2.Tab Navigation
+3.Drawer Navigation
+
+Core concepts in React Native Navigation:
+...............................................................................
+
+Two types of Component
+
+1.Screen
+   =>It is a special component,which only display Userinterface, not having any logic      It acts container.
+2.Component
+   => It is component having biz logic and ui logic...
+
+
+Getting Started:
+
+For Bare React Native project:
+
+1.Stack Navigation : screen to screen
+
+npm install @react-navigation/native   @react-navigation/native-stack
+npm install react-native-screens react-native-safe-area-context
+
+...................................................................................
+Multi screen-Page
+.................................................................................
+
+Types of navigation:
+1.screen to screen - stack navigation -  @react-navigation/stack
+2.Tab - tab based navivation.  @react-navigation/bottom-tabs
+
+Types of navigation:
+1.screen to screen - stack navigation -  @react-navigation/stack
+2.Tab - tab based navivation.  @react-navigation/bottom-tabs
+
+Stack Navigation:
+
+Moving among screens: How to move from one screen to another screen?
+
+StackNavigator :
+ 
+ Object used to navigate between screen.
+
+ Stack Object used to  represent stack navigator.
+
+import { createNativeStackNavigator } from "@react-navigation/native-stack";//create 
+Stack Object
+const Stack  = createNativeStackNavigator();
+console.log(Stack)
+
+Object {
+  "Navigator": [Function StackNavigator],
+  "Screen": [Function Screen],
+}
+1.createStackNavigator is a function that returns an object containing 2 properties: Screen and Navigator.
+2.Both of them are React components used for configuring the navigator.
+The Navigator should contain Screen elements as its children to define the configuration for routes.
+
+3.NavigationContainer is a component which manages our navigation tree and contains the navigation state. This component must wrap all navigators structure. Usually, we'd render this component at the root of our app, which is usually the component exported from App.js.
+
+First Screen
+App.jsx
+import { StatusBar, StyleSheet, useColorScheme, View, Text,Button } from 'react-native';
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+const Stack = createNativeStackNavigator();
+
+//Screens 
+const HomeScreen = (props) => <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+    <Text style={{
+        fontSize: 40,
+    }}>Home Screen</Text>
+   
+</View>
+
+function App() {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  return (
+    <SafeAreaProvider>
+      <AppContent />
+    </SafeAreaProvider>
+  );
+}
+
+function AppContent() {
+  const insets = useSafeAreaInsets();
+  return (
+    <View
+      style={[
+        styles.container,
+        {
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        },
+      ]}
+    >
+      <NavigationContainer>
+        <Stack.Navigator>
+            {/* Screens */}
+          <Stack.Screen name="Home" component={HomeScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'lightblue',
+   },
+});
+
+export default App;
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+									Moving between screens
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+..................................................................................
+			   How to move between screens
+..................................................................................
+
+Navigating to a new screen​
+
+Every Component receives information from the parent component as a prop.
+When component is rendered via route,React Navigator injects an object called "Navigation" Object as prop to every Component
+
+
+Props;
+Object {
+  "navigation": Object {
+    "addListener": [Function addListener],
+    "canGoBack": [Function canGoBack],
+    "dispatch": [Function dispatch],
+    "getId": [Function getId],
+    "getParent": [Function getParent],
+    "getState": [Function anonymous],
+    "goBack": [Function anonymous],
+    "isFocused": [Function isFocused],
+    "navigate": [Function anonymous],
+    "pop": [Function anonymous],
+    "popToTop": [Function anonymous],
+    "push": [Function anonymous],
+    "removeListener": [Function removeListener],
+    "replace": [Function anonymous],
+    "reset": [Function anonymous],
+    "setOptions": [Function setOptions],
+    "setParams": [Function anonymous],
+  },
+  "route": Object {
+    "key": "Home-V-z_dGCJfqcHgNXxzxRGK",
+    "name": "Home",
+    "params": undefined,
+  },
+import { StatusBar, StyleSheet, useColorScheme, View, Text, Button, TouchableHighlight, Alert } from 'react-native';
+import {
+    SafeAreaProvider,
+    useSafeAreaInsets,
+} from 'react-native-safe-area-context';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+const Stack = createNativeStackNavigator();
+
+//Screens 
+const HomeScreen = (props) => <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <TouchableHighlight onPress={() => {
+        props.navigation.navigate("Profile")
+    }} activeOpacity={0.4} underlayColor={'lightgreen'}>
+        <Text style={{
+            fontSize: 40,
+        }}>View Profile</Text>
+    </TouchableHighlight>
 
 
 
+</View>
+const ProfileScreen = (props) => <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{
+        fontSize: 40,
+    }}>Profile Screen</Text>
+</View>
+
+function App() {
+    const isDarkMode = useColorScheme() === 'dark';
+
+    return (
+        <SafeAreaProvider>
+            <AppContent />
+        </SafeAreaProvider>
+    );
+}
+
+function AppContent() {
+    const insets = useSafeAreaInsets();
+    return (
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                },
+            ]}
+        >
+            <NavigationContainer>
+                <Stack.Navigator>
+                    {/* Screens */}
+                    <Stack.Screen name="Home" component={HomeScreen} />
+                    <Stack.Screen name="Profile" component={ProfileScreen} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'black',
+    },
+});
+
+export default App;
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+								Transfering Data between screens
+
+import { StatusBar, StyleSheet, useColorScheme, View, Text, Button, TouchableHighlight, Alert } from 'react-native';
+import {
+    SafeAreaProvider,
+    useSafeAreaInsets,
+} from 'react-native-safe-area-context';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+const Stack = createNativeStackNavigator();
+
+//Screens 
+const HomeScreen = (props) => <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <TouchableHighlight onPress={() => {
+        props.navigation.navigate("Profile", { name: 'Subramanian Murugan' })
+    }} activeOpacity={0.4} underlayColor={'lightgreen'}>
+        <Text style={{
+            fontSize: 40,
+        }}>View Profile</Text>
+    </TouchableHighlight>
 
 
 
+</View>
+const ProfileScreen = (props) => <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Text style={{
+        fontSize: 20,
+    }}>Welcome to {props.route.params.name}</Text>
+</View>
+
+function App() {
+    const isDarkMode = useColorScheme() === 'dark';
+
+    return (
+        <SafeAreaProvider>
+            <AppContent />
+        </SafeAreaProvider>
+    );
+}
+
+function AppContent() {
+    const insets = useSafeAreaInsets();
+    return (
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                },
+            ]}
+        >
+            <NavigationContainer>
+                <Stack.Navigator>
+                    {/* Screens */}
+                    <Stack.Screen name="Home" component={HomeScreen} />
+                    <Stack.Screen name="Profile" component={ProfileScreen} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'black',
+    },
+});
+
+export default App;
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
