@@ -1,0 +1,121 @@
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+									node.js and how to create rest apis
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+What is Node.js ?
+	Node.js just java script platform and runtime to build server side applications you can build any network app from web to tcp , smtp 
+
+Why Node.js?
+      Node.js was created to build non blocking /async applications having single threaded model
+
+What you can do with Node.js?
+      Node.js can be used to build server side web application particularly rest api, graphql api, gprc api
+
+How to build rest api using node?
+
+1.using core node api
+2.using frameworks- Express.js
+
+npm - build tool for managing the complete work flow js applications
+
+npm init  --- create package.json file which describes your project.
+
+
+//web server 
+const http = require('http')
+
+//web server
+const server = http.createServer((req, res) => {
+    res.end('hello rest')
+})
+
+server.listen(3000, () => {
+    console.log('Webserver is ready')
+})
+
+const express = require('express')
+
+//create application objectc
+const app = express()
+
+//expose api
+app.get('/api/todos', (req, res) => {
+    res.json([{ id: 1, text: 'express', status: true }])
+})
+
+app.post('/api/todos', (req, res) => {
+    res.json({ message: 'Create is called' })
+})
+app.put('/api/todos/:id', (req, res) => {
+    res.json({ message: 'Update is called' })
+})
+
+app.delete('/api/todos/:id', (req, res) => {
+    res.json({ message: 'Delete is called' })
+})
+
+//start server
+app.listen(3000, () => {
+    console.log('Express server is ready!')
+})
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+									Router
+
+src/app/routers/todos.router.js
+const express = require('express')
+const TODOS = require('../mock-data/todos')
+const todosRouter = express.Router()
+
+//todos api
+todosRouter.get('/', (req, res) => {
+    res.json(TODOS)
+})
+
+todosRouter.post('/', (req, res) => {
+    res.json({ message: 'Create is called' })
+})
+todosRouter.put('/:id', (req, res) => {
+    res.json({ message: 'Update is called' })
+})
+
+todosRouter.delete('/:id', (req, res) => {
+    res.json({ message: 'Delete is called' })
+})
+
+module.exports = todosRouter
+
+src/routers/posts.router.js
+const express = require('express')
+const postsRouter = express.Router()
+
+//todos api
+postsRouter.get('/', (req, res) => {
+    res.json({ message: 'Post get is called' })
+})
+
+postsRouter.post('/', (req, res) => {
+    res.json({ message: 'Post Create is called' })
+})
+postsRouter.put('/:id', (req, res) => {
+    res.json({ message: ' Post Update is called' })
+})
+
+postsRouter.delete('/:id', (req, res) => {
+    res.json({ message: 'Post Delete is called' })
+})
+
+module.exports = postsRouter
+
+src/app.js
+const express = require('express')
+
+//create application object
+const app = express()
+//connect router 
+app.use('/api/todos', require('./routers/todos.router'))
+app.use('/api/posts', require('./routers/posts.router'))
+
+//start server
+app.listen(3000, () => {
+    console.log('Express server is ready!')
+})
