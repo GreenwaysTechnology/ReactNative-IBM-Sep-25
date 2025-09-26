@@ -1838,7 +1838,6 @@ const styles = StyleSheet.create({
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 									Redux Integration with React Native
 
-
 import { StatusBar, StyleSheet, useColorScheme, View, Text,Button } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { configureStore, createSlice } from '@reduxjs/toolkit'
@@ -2364,8 +2363,7 @@ const styles = StyleSheet.create({
 export default App;
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 									  React Native Navigation
-.....................................................................................................................................................................................................................................................
-			
+...........................................................................................................................................................................................................................................	
 How navigation works?
 
 In a web browser, you can link to different pages using an anchor (<a>) tag. When the user clicks on a link, the URL is pushed to the browser history stack.
@@ -2507,10 +2505,7 @@ export default App;
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 									Moving between screens
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-..................................................................................
-			   How to move between screens
-..................................................................................
+How to move between screens
 
 Navigating to a new screen​
 
@@ -2563,8 +2558,6 @@ const HomeScreen = (props) => <View style={{ flex: 1, justifyContent: 'center', 
             fontSize: 40,
         }}>View Profile</Text>
     </TouchableHighlight>
-
-
 
 </View>
 const ProfileScreen = (props) => <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -2639,8 +2632,6 @@ const HomeScreen = (props) => <View style={{ flex: 1, justifyContent: 'center', 
         }}>View Profile</Text>
     </TouchableHighlight>
 
-
-
 </View>
 const ProfileScreen = (props) => <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
     <Text style={{
@@ -2692,4 +2683,610 @@ const styles = StyleSheet.create({
 
 export default App;
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+								Master Details with Navigation
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+import { ActivityIndicator, FlatList, StyleSheet, useColorScheme, View, Text, Button, TouchableHighlight, Alert } from 'react-native';
+import {
+    SafeAreaProvider,
+    useSafeAreaInsets,
+} from 'react-native-safe-area-context';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useState, useEffect } from "react";
 
+const Stack = createNativeStackNavigator();
+
+const Error = props => {
+    return <>
+        <Text>{props.error}</Text>
+    </>
+}
+
+const Spinner = props => {
+    return <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <ActivityIndicator size='large' color="#0000ff" />
+    </View>
+}
+const PostsScreen = props => {
+    let initalState = {
+        isLoaded: false,
+        items: [],
+        error: null
+    }
+    const [posts, setPosts] = useState(initalState)
+
+    async function fetchPosts() {
+        try {
+            const url = 'https://jsonplaceholder.typicode.com/posts'
+            const values = await (await fetch(url)).json()
+            setPosts({ ...posts, isLoaded: true, items: posts.items.concat(values) })
+        }
+        catch (err) {
+            setPosts({ ...posts, isLoaded: true, error: err })
+        }
+    }
+    //useEffect : ComponentDidMount 
+    useEffect(() => {
+        setTimeout(() => {
+            fetchPosts()
+        }, 5000)
+    }, [])
+
+    const onSelect = (item) => {
+        props.navigation.navigate('PostsDetails', item)
+    }
+
+    const { error, isLoaded, items } = posts
+    if (error) {
+        return <Error error={error} />
+    } else if (!isLoaded) {
+        return <Spinner />
+    } else {
+        return <FlatList
+            data={items}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => {
+                return <TouchableHighlight activeOpacity={0.4} underlayColor='yellow' onPress={() => { onSelect(item) }} >
+                    <View>
+                        <Text style={styles.item}>{item.title}</Text>
+                    </View>
+                </TouchableHighlight>
+            }}
+        />
+    }
+
+}
+const PostsDetailScreen = props => {
+    const { title, body } = props.route.params
+    return <View style={styles.container}>
+        <Text style={{ fontSize: 25, color: 'blue' }}>{title}</Text>
+        <Text style={{ fontSize: 20, color: 'red' }}>{body}</Text>
+    </View>
+}
+
+
+
+//Screens 
+const HomeScreen = (props) => <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <TouchableHighlight onPress={() => {
+        props.navigation.navigate("Posts")
+    }} activeOpacity={0.4} underlayColor={'lightgreen'}>
+        <Text style={{
+            fontSize: 40,
+        }}>Posts</Text>
+    </TouchableHighlight>
+
+
+
+</View>
+
+
+function App() {
+    const isDarkMode = useColorScheme() === 'dark';
+
+    return (
+        <SafeAreaProvider>
+            <AppContent />
+        </SafeAreaProvider>
+    );
+}
+
+function AppContent() {
+    const insets = useSafeAreaInsets();
+    return (
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                },
+            ]}
+        >
+            <NavigationContainer>
+                <Stack.Navigator>
+                    {/* Screens */}
+                    <Stack.Screen name="Home" component={HomeScreen} />
+                    <Stack.Screen name="Posts" component={PostsScreen} />
+                    <Stack.Screen name="PostsDetails" component={PostsDetailScreen} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'black',
+    },
+});
+
+export default App;
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+										Header styles
+
+
+There are three key properties to use when customizing the style of your header: headerStyle, headerTintColor, and headerTitleStyle.
+
+headerStyle: a style object that will be applied to the View that wraps the header. If you set backgroundColor on it, that will be the color of your header.
+
+headerTintColor: the back button and title both use this property as their color.
+
+headerTitleStyle: if we want to customize the fontFamily, fontWeight and other Text 
+Style properties for the title, we can use this to do it.
+
+
+import { ActivityIndicator, FlatList, StyleSheet, useColorScheme, View, Text, Button, TouchableHighlight, Alert } from 'react-native';
+import {
+    SafeAreaProvider,
+    useSafeAreaInsets,
+} from 'react-native-safe-area-context';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useState, useEffect } from "react";
+
+const Stack = createNativeStackNavigator();
+
+const Error = props => {
+    return <>
+        <Text>{props.error}</Text>
+    </>
+}
+
+const Spinner = props => {
+    return <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <ActivityIndicator size='large' color="#0000ff" />
+    </View>
+}
+const PostsScreen = props => {
+    let initalState = {
+        isLoaded: false,
+        items: [],
+        error: null
+    }
+    const [posts, setPosts] = useState(initalState)
+
+    async function fetchPosts() {
+        try {
+            const url = 'https://jsonplaceholder.typicode.com/posts'
+            const values = await (await fetch(url)).json()
+            setPosts({ ...posts, isLoaded: true, items: posts.items.concat(values) })
+        }
+        catch (err) {
+            setPosts({ ...posts, isLoaded: true, error: err })
+        }
+    }
+    //useEffect : ComponentDidMount 
+    useEffect(() => {
+        setTimeout(() => {
+            fetchPosts()
+        }, 5000)
+    }, [])
+
+    const onSelect = (item) => {
+        props.navigation.navigate('PostsDetails', item)
+    }
+
+    const { error, isLoaded, items } = posts
+    if (error) {
+        return <Error error={error} />
+    } else if (!isLoaded) {
+        return <Spinner />
+    } else {
+        return <FlatList
+            data={items}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => {
+                return <TouchableHighlight activeOpacity={0.4} underlayColor='yellow' onPress={() => { onSelect(item) }} >
+                    <View>
+                        <Text style={styles.item}>{item.title}</Text>
+                    </View>
+                </TouchableHighlight>
+            }}
+        />
+    }
+
+}
+const PostsDetailScreen = props => {
+    const { title, body } = props.route.params
+    return <View style={styles.container}>
+        <Text style={{ fontSize: 25, color: 'blue' }}>{title}</Text>
+        <Text style={{ fontSize: 20, color: 'red' }}>{body}</Text>
+    </View>
+}
+
+
+
+//Screens 
+const HomeScreen = (props) => <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <TouchableHighlight onPress={() => {
+        props.navigation.navigate("Posts")
+    }} activeOpacity={0.4} underlayColor={'lightgreen'}>
+        <Text style={{
+            fontSize: 40,
+        }}>Posts</Text>
+    </TouchableHighlight>
+
+
+
+</View>
+
+
+function App() {
+    const isDarkMode = useColorScheme() === 'dark';
+
+    return (
+        <SafeAreaProvider>
+            <AppContent />
+        </SafeAreaProvider>
+    );
+}
+
+function AppContent() {
+    const insets = useSafeAreaInsets();
+    return (
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                },
+            ]}
+        >
+            <NavigationContainer>
+                <Stack.Navigator screenOptions={{
+                    headerStyle: {
+                        backgroundColor: '#1ef45eff',
+                    }
+                }}>
+                    {/* Screens */}
+                    <Stack.Screen options={{
+                        title: 'Post Application',
+                        headerStyle: {
+                            backgroundColor: '#f4511e',
+                        },
+                        headerTintColor: '#ffffffff',
+                        headerTitleStyle: {
+                            fontWeight: 'bold',
+                        }
+                    }} name="Home" component={HomeScreen} />
+                    <Stack.Screen name="Posts" component={PostsScreen} />
+                    <Stack.Screen options={(navigation) => {
+                        return {
+                            title: `${navigation.route.params.id} details`
+                        }
+                    }} name="PostsDetails" component={PostsDetailScreen} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'black',
+    },
+});
+
+export default App;
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+
+import { StatusBar, StyleSheet, useColorScheme, View, Text, Button } from 'react-native';
+import {
+    SafeAreaProvider,
+    useSafeAreaInsets,
+} from 'react-native-safe-area-context';
+import { NavigationContainer } from "@react-navigation/native";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+
+const Tab = createMaterialTopTabNavigator();
+
+//Screens 
+const FeedScreen = () => {
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>FeedScreen</Text>
+    </View>
+}
+const NotificationsScreen = () => {
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>NotificationsScreen</Text>
+    </View>
+}
+const ProfileScreen = () => {
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>ProfileScreen</Text>
+    </View>
+}
+
+function MyTabs() {
+    return <Tab.Navigator initialRouteName="Feed" screenOptions={{
+        tabBarActiveTintColor: '#e91e63',
+        tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: 'bold',
+        },
+        tabBarStyle: {
+            backgroundColor: 'powderblue'
+        }
+    }}>
+        <Tab.Screen name="Feed" component={FeedScreen} />
+        <Tab.Screen name="Notifications" component={NotificationsScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
+    </Tab.Navigator>
+}
+
+
+
+
+function App() {
+    const isDarkMode = useColorScheme() === 'dark';
+
+    return (
+        <SafeAreaProvider>
+            <AppContent />
+        </SafeAreaProvider>
+    );
+}
+
+function AppContent() {
+    const insets = useSafeAreaInsets();
+    return (
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                },
+            ]}
+        >
+            <NavigationContainer>
+                <MyTabs />
+            </NavigationContainer>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'black',
+
+    },
+});
+
+export default App;
+.............................................................................................................................................................................................................................................
+								  Tab Navigation
+...................................................................................
+
+Tab Naviation:
+
+Types of Tabs
+1.TopTab
+2.BottomTab
+3.MaterialBottomTab | MaterialTopTab
+
+npm i @react-navigation/material-top-tabs
+npm i @react-navigation/bottom-tabs
+npm i @react-navigation/material-bottom-tabs
+
+import { StatusBar, StyleSheet, useColorScheme, View, Text, Button } from 'react-native';
+import {
+    SafeAreaProvider,
+    useSafeAreaInsets,
+} from 'react-native-safe-area-context';
+import { NavigationContainer } from "@react-navigation/native";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+
+const Tab = createMaterialTopTabNavigator();
+
+//Screens 
+const FeedScreen = () => {
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>FeedScreen</Text>
+    </View>
+}
+const NotificationsScreen = () => {
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>NotificationsScreen</Text>
+    </View>
+}
+const ProfileScreen = () => {
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>ProfileScreen</Text>
+    </View>
+}
+
+function MyTabs() {
+    return <Tab.Navigator initialRouteName="Feed" screenOptions={{
+        tabBarActiveTintColor: '#e91e63',
+        tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: 'bold',
+        },
+        tabBarStyle: {
+            backgroundColor: 'powderblue'
+        }
+    }}>
+        <Tab.Screen name="Feed" component={FeedScreen} />
+        <Tab.Screen name="Notifications" component={NotificationsScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
+    </Tab.Navigator>
+}
+
+
+
+
+function App() {
+    const isDarkMode = useColorScheme() === 'dark';
+
+    return (
+        <SafeAreaProvider>
+            <AppContent />
+        </SafeAreaProvider>
+    );
+}
+
+function AppContent() {
+    const insets = useSafeAreaInsets();
+    return (
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                },
+            ]}
+        >
+            <NavigationContainer>
+                <MyTabs />
+            </NavigationContainer>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'black',
+
+    },
+});
+
+export default App;
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&							  Tab + Stack Navigation
+
+import { StatusBar, StyleSheet, useColorScheme, View, Text, Button } from 'react-native';
+import {
+    SafeAreaProvider,
+    useSafeAreaInsets,
+} from 'react-native-safe-area-context';
+import { NavigationContainer } from "@react-navigation/native";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+const Tab = createMaterialTopTabNavigator();
+const Stack = createNativeStackNavigator();
+
+//Screens 
+const Feed = () => {
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>FeedScreen</Text>
+    </View>
+}
+
+const NotificationsScreen = () => {
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>NotificationsScreen</Text>
+    </View>
+}
+const ProfileScreen = () => {
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>ProfileScreen</Text>
+    </View>
+}
+const Messages = props => {
+    const { navigation } = props;
+    return <View style={styles.container}>
+        <Text>Messages Screen</Text>
+        <Button title="go to Settions" onPress={() => {
+            navigation.navigate('Settings')
+        }} />
+    </View>
+}
+const Home = props => {
+    return <Tab.Navigator>
+        <Tab.Screen name="Messages" component={Messages} />
+        <Tab.Screen name="Feed" component={Feed} />
+    </Tab.Navigator>
+}
+const Settings = props => {
+    return <View style={styles.container}>
+        <Text>Settings Screen</Text>
+    </View>
+}
+function App() {
+    const isDarkMode = useColorScheme() === 'dark';
+
+    return (
+        <SafeAreaProvider>
+            <AppContent />
+        </SafeAreaProvider>
+    );
+}
+
+function AppContent() {
+    const insets = useSafeAreaInsets();
+    return (
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                },
+            ]}
+        >
+            <NavigationContainer>
+                <Stack.Navigator>
+                    <Stack.Screen
+                        name="Home"
+                        component={Home}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen name="Settings" component={Settings} />
+                </Stack.Navigator>
+
+            </NavigationContainer>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'black',
+
+    },
+});
+
+export default App;
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&

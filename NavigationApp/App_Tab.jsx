@@ -6,18 +6,14 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 const Tab = createMaterialTopTabNavigator();
-const Stack = createNativeStackNavigator();
 
 //Screens 
-const Feed = () => {
+const FeedScreen = () => {
     return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>FeedScreen</Text>
     </View>
 }
-
 const NotificationsScreen = () => {
     return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>NotificationsScreen</Text>
@@ -28,26 +24,27 @@ const ProfileScreen = () => {
         <Text>ProfileScreen</Text>
     </View>
 }
-const Messages = props => {
-    const { navigation } = props;
-    return <View style={styles.container}>
-        <Text>Messages Screen</Text>
-        <Button title="go to Settions" onPress={() => {
-            navigation.navigate('Settings')
-        }} />
-    </View>
-}
-const Home = props => {
-    return <Tab.Navigator>
-        <Tab.Screen name="Messages" component={Messages} />
-        <Tab.Screen name="Feed" component={Feed} />
+
+function MyTabs() {
+    return <Tab.Navigator initialRouteName="Feed" screenOptions={{
+        tabBarActiveTintColor: '#e91e63',
+        tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: 'bold',
+        },
+        tabBarStyle: {
+            backgroundColor: 'powderblue'
+        }
+    }}>
+        <Tab.Screen name="Feed" component={FeedScreen} />
+        <Tab.Screen name="Notifications" component={NotificationsScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
 }
-const Settings = props => {
-    return <View style={styles.container}>
-        <Text>Settings Screen</Text>
-    </View>
-}
+
+
+
+
 function App() {
     const isDarkMode = useColorScheme() === 'dark';
 
@@ -73,15 +70,7 @@ function AppContent() {
             ]}
         >
             <NavigationContainer>
-                <Stack.Navigator>
-                    <Stack.Screen
-                        name="Home"
-                        component={Home}
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen name="Settings" component={Settings} />
-                </Stack.Navigator>
-
+                <MyTabs />
             </NavigationContainer>
         </View>
     );
